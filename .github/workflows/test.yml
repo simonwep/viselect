@@ -36,3 +36,11 @@ jobs:
 
       - name: Build docs
         run: pnpm docs:build
+
+      - name: Install playwright browsers
+        run: |
+          cd ./packages/vanilla
+          pnpm exec playwright install --with-deps chromium
+
+      - name: Run tests
+        run: pnpm test

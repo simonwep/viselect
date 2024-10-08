@@ -10,9 +10,10 @@
   "scripts": {
     "dev": "pnpm run --parallel dev",
     "build": "pnpm run --recursive build",
+    "test": "pnpm run --recursive test",
     "lint": "eslint \"**/*.{mjs,mts,ts,tsx,vue}\" --cache",
     "lint:fix": "pnpm run lint --fix",
-    "test:ci": "pnpm run lint:fix && pnpm run build && pnpm docs:build",
+    "test:ci": "pnpm run lint:fix && pnpm run build && pnpm docs:build && pnpm test",
     "release:major": "lerna version major",
     "release:minor": "lerna version minor",
     "release:patch": "lerna version patch",

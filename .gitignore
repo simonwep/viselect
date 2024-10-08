@@ -5,3 +5,7 @@ dist
 .idea/
 .log
 .eslintcache
+.vitest-attachments/
+__screenshots__/
+html/
+test-results/

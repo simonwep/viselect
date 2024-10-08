@@ -1,0 +1,61 @@
+<style>
+    #fixture {
+        padding: 24px;
+    }
+
+    #boundary {
+        position: relative;
+        width: 240px;
+        height: 240px;
+        border: 1px solid;
+        overflow: hidden;
+    }
+
+    #boundary.scrollable {
+        overflow: auto;
+    }
+
+    #start-area {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, 80px);
+        gap: 16px;
+        padding: 16px;
+        min-height: 100%;
+        align-content: start;
+    }
+
+    #boundary.scrollable #start-area {
+        min-height: 520px;
+    }
+
+    .selectable {
+        width: 80px;
+        height: 80px;
+    }
+
+    #tap-overlay {
+        position: absolute;
+        top: 17px;
+        left: 17px;
+        width: 78px;
+        height: 78px;
+        border: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    #outside {
+        width: 80px;
+        height: 80px;
+        margin-top: 16px;
+    }
+</style>
+
+<main id="boundary" data-testid="boundary">
+    <section id="start-area" data-testid="start-area">
+        <button id="tap-overlay" data-testid="tap-overlay"></button>
+    </section>
+</main>
+
+<button id="outside" data-testid="outside">outside</button>

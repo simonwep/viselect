@@ -654,6 +654,10 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
           if (invert && stored.includes(node)) {
             removed.push(node);
             continue;
+          } else if (overlap === 'drop' && stored.includes(node)) {
+            touched.push(node);
+            newlyTouched.push(node);
+            continue;
           } else {
             added.push(node);
           }
@@ -843,7 +847,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
   select(query: SelectAllSelectors, quiet = false): Element[] {
     const { changed, selected, stored } = this._selection;
     const elements = selectAll(query, this._options.document).filter(
-      (el) => !selected.includes(el) && !stored.includes(el)
+      (el, index, all) => !selected.includes(el) && !stored.includes(el) && all.indexOf(el) === index
     );
 
     // Update element lists
