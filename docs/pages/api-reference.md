@@ -178,13 +178,17 @@ getSelectionArea(): HTMLElement;
 
 ### `getSelectables`
 
-Returns all selectables.
+> Available as of [`v3.9.0`](https://github.com/simonwep/viselect/releases/tag/v3.9.0).
+
+Returns all currently selectable elements.
 
 ```typescript
 getSelectables(): Element[];
 ```
 
 ### `setAreaLocation`
+
+> Available as of [`v3.9.0`](https://github.com/simonwep/viselect/releases/tag/v3.9.0).
 
 Sets the location of the selection area.
 
@@ -195,6 +199,8 @@ setAreaLocation(location: Partial<AreaLocation>): void;
 - `location: Partial<AreaLocation>` - A partial AreaLocation object.
 
 ### `getAreaLocation`
+
+> Available as of [`v3.9.0`](https://github.com/simonwep/viselect/releases/tag/v3.9.0).
 
 Returns the current location of the selection area.
 

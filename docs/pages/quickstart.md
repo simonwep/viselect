@@ -108,7 +108,6 @@ import SelectionArea from '@viselect/vanilla';
 
 const styles = useCssModule();
 const container = useTemplateRef('container');
-const { matches: mobile } = window.matchMedia('(max-width: 430px)');
 
 onMounted(() => {
   const { width } = container.value.getBoundingClientRect();

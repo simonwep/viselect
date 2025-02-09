@@ -4,6 +4,11 @@
 
 ## Installation
 
+> [!WARNING]
+> As of [v3.8.0](https://github.com/simonwep/viselect/releases/tag/v3.8.0) Viselect requires React 19 due to breaking changes.
+> If you're using an older version of React, use [v3.7.1](https://github.com/simonwep/viselect/releases/tag/v3.7.1).
+> Note that older versions are no longer supported, however you can still [roll out your own integration](../custom-integration.md) if you need to - don't worry, it's easy!
+
 To use Viselect with React, install its react package with:
 
 ::: code-group
