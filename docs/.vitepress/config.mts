@@ -6,9 +6,41 @@ const require = createRequire(import.meta.url)
 export default defineConfig({
     title: 'Viselect',
     base: '/viselect/',
-    description: 'Viselect - A high performance and lightweight library to add a visual way of selecting elements, just like on your Desktop. Zero dependencies, super small.',
+    description: 'Viselect - A high performance and lightweight library to add a visual way of selecting elements, just like on your Desktop. Zero dependencies.',
     head: [
-        ['link', {rel: 'icon', href: 'favicon.png'}]
+
+        // SEO
+        ['meta', {name: 'keywords', content: 'viselect, select, selectbox, selectize, selectize, typescript, simonwep'}],
+        ['meta', {name: 'description', content: 'Viselect - A high performance and lightweight library to add a visual way of selecting elements, just like on your Desktop. Zero dependencies.'}],
+        ['meta', {name: 'subject', content: 'Software development'}],
+        ['meta', {name: 'topic', content: 'Software development'}],
+        ['meta', {name: 'summary', content: 'Viselect - A high performance and lightweight library to add a visual way of selecting elements, just like on your Desktop. Zero dependencies.'}],
+        ['meta', {name: 'copyright', content: 'Simon Reinisch'}],
+        ['meta', {name: 'owner', content: 'Simon Reinisch'}],
+        ['meta', {name: 'author', content: 'Simon Reinisch'}],
+        ['meta', {name: 'robots', content: 'index, follow'}],
+        ['meta', {name: 'url', content: 'https://simonwep.github.io/viselect'}],
+        ['meta', {name: 'revisit-after', content: '7 days'}],
+
+        // Open Graph
+        ['meta', {property: 'og:url', content: 'https://simonwep.github.io/viselect'}],
+        ['meta', {property: 'og:type', content: 'website'}],
+        ['meta', {property: 'og:site_name', content: 'Viselect'}],
+        ['meta', {property: 'og:title', content: 'Viselect'}],
+        ['meta', {property: 'og:image', content: 'https://simonwep.github.io/viselect/cover.png'}],
+        ['meta', {property: 'og:image:type', content: 'image/png'}],
+        ['meta', {property: 'og:image:height', content: '1080'}],
+        ['meta', {property: 'og:image:width', content: '1920'}],
+        ['meta', {property: 'og:image:alt', content: 'The cover of Viselect featuring the name and a subheader on a solid white background.'}],
+        ['meta', {property: 'og:description', content: 'Viselect - A high performance and lightweight library to add a visual way of selecting elements, just like on your Desktop. Zero dependencies.'}],
+
+        // Analytics
+        ['script', {defer: true, src: 'https://numai.reinisch.io/script.js', 'data-website-id': 'f2c623d2-5353-4dc5-acc5-d6979536958a'}],
+
+        // Icons
+        ['link', {rel: 'icon', href: 'favicon.ico', sizes: '32x32'}],
+        ['link', {rel: 'icon', href: 'favicon.svg', sizes: 'any', type: 'image/svg+xml'}],
+        ['link', {rel: 'apple-touch-icon', href: 'apple-touch-icon.png'}],
     ],
     themeConfig: {
         nav: [

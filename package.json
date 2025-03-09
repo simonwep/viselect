@@ -16,7 +16,7 @@
         "release:major": "lerna version major",
         "release:minor": "lerna version minor",
         "release:patch": "lerna version patch",
-        "docs:dev": "vitepress dev docs",
+        "docs:dev": "vitepress dev docs --port 3033",
         "docs:build": "vitepress build docs",
         "docs:preview": "vitepress preview docs"
     },
