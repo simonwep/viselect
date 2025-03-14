@@ -24,7 +24,7 @@ Events are bind/unbind using the [on](#on--addeventlistener) and [off](#off--rem
 selection.on('beforestart', evt => {
 
   // Use this event to decide whether a selection should take place or not.
-  // For example if the user should be able to normally interact with input-elements you 
+  // For example if the user should be able to normally interact with input-elements you
   // may want to prevent a selection if the user clicks such a element:
   // selection.on('beforestart', ({event}) => {
   //   return event.target.tagName !== 'INPUT'; // Returning false prevents a selection
@@ -266,27 +266,63 @@ deselect(query: SelectAllSelectors, quiet = false): Element[];
 
 ## Types
 
-### `DeepPartial<T>`
+### `SelectionOptions`
 
-> [!WARNING]
-> Internal type, subject to change at any time.
+An interface representing selection options, this is after defaults have been applied.
+A detailed explanation of each option can be found under [Quickstart](./quickstart.html#configuration)!
 
-A type that makes all properties in `T` optional and allows for nested optional properties.
-
-```typescript
-type DeepPartial<T> = T extends unknown[] ? T : T extends HTMLElement ? T : { [P in keyof T]?: DeepPartial<T[P]>; };
-```
-
-### `Quantify<T>`
-
-> [!WARNING]
-> Internal type, subject to change at any time.
-
-A type that allows `T` to be an array or a single value.
+It consists of the following interfaces:
 
 ```typescript
-type Quantify<T> = T[] | T;
+interface SingleTap {
+  allow: boolean;
+  intersect: TapMode;
+}
+
+interface Features {
+  deselectOnBlur: boolean;
+  singleTap: SingleTap;
+  range: boolean;
+  touch: boolean;
+}
+
+interface Scrolling {
+  speedDivider: number;
+  manualSpeed: number;
+  startScrollMargins: {x: number, y: number};
+}
+
+interface Behaviour {
+  intersect: Intersection;
+  startThreshold: number | Coordinates;
+  overlap: OverlapMode;
+  scrolling: Scrolling;
+  triggers: Trigger[];
+}
+
+interface SelectionOptions {
+  selectionAreaClass: string;
+  selectionContainerClass: string | undefined;
+  container: Quantify<string | HTMLElement>;
+  document: Document;
+  selectables: Quantify<string>;
+  startAreas: Quantify<string | HTMLElement>;
+  boundaries: Quantify<string | HTMLElement>;
+  behaviour: Behaviour;
+  features: Features;
+}
 ```
+
+### `PartialSelectionOptions`
+
+Type of what can be passed to the `SelectionArea` constructor.
+
+```typescript
+type PartialSelectionOptions = DeepPartial<Omit<SelectionOptions, 'document'>> & {
+  document?: Document;
+};
+```
+
 
 ### `ScrollEvent`
 
@@ -410,57 +446,23 @@ type OverlapMode = 'keep' | 'drop' | 'invert';
 - `drop` - Deselect the element.
 - `invert` - Deselect the element if it is selected, otherwise select it (default).
 
-### `SelectionOptions`
+## Internal types
 
-An interface representing selection options, this is after defaults have been applied.
-It consists of the following interfaces:
+> [!WARNING]
+> Internal type, subject to change at any time.
+
+### `DeepPartial<T>`
+
+A type that makes all properties in `T` optional and allows for nested optional properties.
 
 ```typescript
-interface SingleTap {
-  allow: boolean;
-  intersect: TapMode;
-}
-
-interface Features {
-  deselectOnBlur: boolean;
-  singleTap: SingleTap;
-  range: boolean;
-  touch: boolean;
-}
-
-interface Scrolling {
-  speedDivider: number;
-  manualSpeed: number;
-  startScrollMargins: {x: number, y: number};
-}
-
-interface Behaviour {
-  intersect: Intersection;
-  startThreshold: number | Coordinates;
-  overlap: OverlapMode;
-  scrolling: Scrolling;
-  triggers: Trigger[];
-}
-
-interface SelectionOptions {
-  selectionAreaClass: string;
-  selectionContainerClass: string | undefined;
-  container: Quantify<string | HTMLElement>;
-  document: Document;
-  selectables: Quantify<string>;
-  startAreas: Quantify<string | HTMLElement>;
-  boundaries: Quantify<string | HTMLElement>;
-  behaviour: Behaviour;
-  features: Features;
-}
+type DeepPartial<T> = T extends unknown[] ? T : T extends HTMLElement ? T : { [P in keyof T]?: DeepPartial<T[P]>; };
 ```
 
-### `PartialSelectionOptions`
+### `Quantify<T>`
 
-Type of what can be passed to the `SelectionArea` constructor.
+A type that allows `T` to be an array or a single value.
 
 ```typescript
-type PartialSelectionOptions = DeepPartial<Omit<SelectionOptions, 'document'>> & {
-  document?: Document;
-};
+type Quantify<T> = T[] | T;
 ```

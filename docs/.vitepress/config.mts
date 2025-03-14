@@ -38,9 +38,9 @@ export default defineConfig({
         ['script', {defer: true, src: 'https://numai.reinisch.io/script.js', 'data-website-id': 'f2c623d2-5353-4dc5-acc5-d6979536958a'}],
 
         // Icons
-        ['link', {rel: 'icon', href: 'favicon.ico', sizes: '32x32'}],
-        ['link', {rel: 'icon', href: 'favicon.svg', sizes: 'any', type: 'image/svg+xml'}],
-        ['link', {rel: 'apple-touch-icon', href: 'apple-touch-icon.png'}],
+        ['link', {rel: 'icon', href: '/viselect/favicon.ico', sizes: '32x32'}],
+        ['link', {rel: 'icon', href: '/viselect/favicon.svg', sizes: 'any', type: 'image/svg+xml'}],
+        ['link', {rel: 'apple-touch-icon', href: '/viselect/apple-touch-icon.png'}],
     ],
     themeConfig: {
         nav: [
@@ -53,6 +53,7 @@ export default defineConfig({
                 text: 'Introduction',
                 items: [
                     {text: 'Quickstart', link: 'pages/quickstart'},
+                    {text: 'Examples', link: 'pages/examples'},
                     {text: 'API Reference', link: 'pages/api-reference'},
                     {text: 'Custom Integration', link: 'pages/custom-integration'},
                     {text: 'FAQ', link: 'pages/faq'},

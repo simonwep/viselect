@@ -115,10 +115,10 @@ onMounted(() => {
   const rows = 3;
   const totalBoxMargin = 4 * 2 * (boxes / rows);
   const boxWidth = (width - 20 - 4 - totalBoxMargin) / ((boxes / rows));
-  
+
   [[styles.purple, boxes], [styles.blue, boxes]].forEach(([selector, items]) => {
     const container = document.querySelector(`.${selector}`);
-  
+
     for (let i = 0; i < items; i++) {
       const div = document.createElement('div');
       div.style.width = div.style.height = `${Math.floor(boxWidth)}px`;
@@ -138,7 +138,7 @@ onMounted(() => {
   }).on('move', ({ store: { changed: { added, removed } } }) => {
     added.forEach(el => el.classList.add(styles.selected));
     removed.forEach(el => el.classList.remove(styles.selected));
-  }); 
+  });
 });
 </script>
 
@@ -243,7 +243,7 @@ const selection = new SelectionArea({
     // trigger property should look like
     //
     // triggers: [ { button: 0, modifiers: [ "ctrl", "shift" ] }, 2 ]
-    // 
+    //
     // The default value is [0], enabling only the main mouse button (usually left click).
     // On mac the ctrl will act as the meta key.
     triggers: [0],
@@ -255,7 +255,7 @@ const selection = new SelectionArea({
       // Default is 10 to provide a enjoyable scroll experience.
       speedDivider: 10,
 
-      // Browsers handle mouse-wheel events differently, this number will be used as 
+      // Browsers handle mouse-wheel events differently, this number will be used as
       // numerator to calculate the mount of px while scrolling manually: manualScrollSpeed / scrollSpeedDivider.
       manualSpeed: 750,
 

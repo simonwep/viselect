@@ -5,7 +5,7 @@ hero:
   name: "Viselect"
   text: "Visual Selection Library"
   tagline: "A modern, ultra-tiny, and highly optimized selection library"
-  image: 
+  image:
     src: logo.png
     alt: Viselect logo
   actions:
@@ -15,6 +15,9 @@ hero:
     - theme: alt
       text: API Reference
       link: pages/api-reference
+    - theme: alt
+      text: Examples
+      link: pages/examples
 
 features:
     - icon: 🌟

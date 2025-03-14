@@ -83,7 +83,7 @@ selection.on('beforestart', (() => {
 
 Issues: [#70](https://github.com/simonwep/viselect/issues/70)
 
-## Preventing the start of a selection based on certain conditions 
+## Preventing the start of a selection based on certain conditions
 
 ```js
 selection.on('beforestart', ({event}) => {

@@ -1,4 +1,4 @@
-# Integrating Viselect into _anything_ 
+# Integrating Viselect into _anything_
 
 As mentioned in the [quickstart](./quickstart.md), Viselect is a framework-agnostic library.
 This means that you can use it with any framework or library you want.
@@ -9,9 +9,9 @@ Don't worry, there aren't many differences between the integrations, and after y
 ## Lifecycle
 
 Generally, viselect is instantiated once and should be re-created once the options need to change.
-Don't worry, instantiating and destroying the selection area is a lightweight operation and won't cause any major performance issues.
+Don't worry, instantiating and destroying the selection area is a lightweight operation and won't cause any performance issues.
 
-Example based on vue and react:
+Copy-paste ready examples for Vue and React:
 
 ::: code-group
 

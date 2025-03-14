@@ -1,8 +1,6 @@
 name: Deploy Docs
 
-on:
-  push:
-    branches: [master]
+on: ["push", "pull_request"]
 
 permissions:
   contents: read
@@ -52,12 +50,13 @@ jobs:
           path: docs/.vitepress/dist
 
   deploy:
+    name: Deploy
+    runs-on: ubuntu-22.04
+    needs: build
+    if: github.ref == 'refs/heads/master'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-22.04
-    name: Deploy
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
