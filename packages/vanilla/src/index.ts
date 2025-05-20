@@ -1,5 +1,5 @@
 import {EventTarget} from './EventEmitter';
-import type {AreaLocation, Coordinates, ScrollEvent, SelectionEvents, SelectionOptions, SelectionStore} from './types';
+import type {AreaLocation, Coordinates, Dimensions, ScrollEvent, SelectionEvents, SelectionOptions, SelectionStore, ScrollController} from './types';
 import {PartialSelectionOptions} from './types';
 import {css} from './utils/css';
 import {domRect} from './utils/domRect';
@@ -23,11 +23,37 @@ const makeSelectionStore = (stored: Element[] = []): SelectionStore => ({
     changed: {added: [], removed: []}
 });
 
+// Default scroll controller implementation
+const defaultScrollController: ScrollController = {
+    getScrollPosition: (element: Element): Coordinates => ({
+        x: element.scrollLeft,
+        y: element.scrollTop
+    }),
+    setScrollPosition: (element: Element, position: Partial<Coordinates>): void => {
+        if (position.x !== undefined) {
+            element.scrollLeft = position.x;
+        }
+        if (position.y !== undefined) {
+            element.scrollTop = position.y;
+        }
+    },
+    getScrollSize: (element: Element): Dimensions => ({
+        width: element.scrollWidth,
+        height: element.scrollHeight
+    }),
+    getClientSize: (element: Element): Dimensions => ({
+        width: element.clientWidth,
+        height: element.clientHeight
+    }),
+    alwaysScroll: false
+};
+
 export default class SelectionArea extends EventTarget<SelectionEvents> {
     public static version = VERSION;
 
     // Options
     private readonly _options: SelectionOptions;
+    private readonly _scrollController: ScrollController;
 
     // Selection store
     private _selection: SelectionStore = makeSelectionStore();
@@ -106,6 +132,15 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                     ...opt.features?.singleTap,
                 }
             }
+        };
+
+        // Initialize scroll controller
+        this._scrollController = {
+            getScrollPosition: opt.scrollController?.getScrollPosition || defaultScrollController.getScrollPosition,
+            setScrollPosition: opt.scrollController?.setScrollPosition || defaultScrollController.setScrollPosition,
+            getScrollSize: opt.scrollController?.getScrollSize || defaultScrollController.getScrollSize,
+            getClientSize: opt.scrollController?.getClientSize || defaultScrollController.getClientSize,
+            alwaysScroll: opt.scrollController?.alwaysScroll || defaultScrollController.alwaysScroll
         };
 
         // Bind locale functions to instance
@@ -198,7 +233,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
 
         // Lock scrolling in the target container
         const scrollElement = document.scrollingElement ?? document.body;
-        this._scrollDelta = {x: scrollElement.scrollLeft, y: scrollElement.scrollTop};
+        const scrollPosition = this._scrollController.getScrollPosition(scrollElement);
+        this._scrollDelta = {x: scrollPosition.x, y: scrollPosition.y};
 
         // To detect single-click
         this._singleClick = true;
@@ -326,9 +362,13 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             this._targetRect = this._targetElement!.getBoundingClientRect();
 
             // Find a container and check if it's scrollable
+            const targetElement = this._targetElement as Element;
+            const scrollSize = this._scrollController.getScrollSize(targetElement);
+            const clientSize = this._scrollController.getClientSize(targetElement);
+            
             this._scrollAvailable =
-                this._targetElement!.scrollHeight !== this._targetElement!.clientHeight ||
-                this._targetElement!.scrollWidth !== this._targetElement!.clientWidth;
+                scrollSize.height !== clientSize.height ||
+                scrollSize.width !== clientSize.width;
 
             if (this._scrollAvailable) {
 
@@ -425,16 +465,21 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                 }
 
                 // Reduce velocity, use ceil in both directions to scroll at least 1px per frame
-                const {scrollTop, scrollLeft} = _targetElement;
+                const {x: currentScrollPositionX, y: currentScrollPositionY} = this._scrollController.getScrollPosition(_targetElement);
+                const newScrollPosition: Partial<Coordinates> = {};
 
                 if (_scrollSpeed.y) {
-                    _targetElement.scrollTop += ceil(_scrollSpeed.y / speedDivider);
-                    _areaLocation.y1 -= _targetElement.scrollTop - scrollTop;
+                    newScrollPosition.y = currentScrollPositionY + ceil(_scrollSpeed.y / speedDivider);
+                    this._scrollController.setScrollPosition(_targetElement, newScrollPosition);
+                    const updatedPosition = this._scrollController.getScrollPosition(_targetElement);
+                    _areaLocation.y1 -= updatedPosition.y - currentScrollPositionY;
                 }
 
                 if (_scrollSpeed.x) {
-                    _targetElement.scrollLeft += ceil(_scrollSpeed.x / speedDivider);
-                    _areaLocation.x1 -= _targetElement.scrollLeft - scrollLeft;
+                    newScrollPosition.x = currentScrollPositionX + ceil(_scrollSpeed.x / speedDivider);
+                    this._scrollController.setScrollPosition(_targetElement, newScrollPosition);
+                    const updatedPosition = this._scrollController.getScrollPosition(_targetElement);
+                    _areaLocation.x1 -= updatedPosition.x - currentScrollPositionX;
                 }
 
                 /**
@@ -476,13 +521,14 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
 
     _onScroll(): void {
         const {_scrollDelta, _options: {document}} = this;
-        const {scrollTop, scrollLeft} = document.scrollingElement ?? document.body;
+        const scrollElement = document.scrollingElement ?? document.body;
+        const scrollPosition = this._scrollController.getScrollPosition(scrollElement);
 
         // Adjust area start location
-        this._areaLocation.x1 += _scrollDelta.x - scrollLeft;
-        this._areaLocation.y1 += _scrollDelta.y - scrollTop;
-        _scrollDelta.x = scrollLeft;
-        _scrollDelta.y = scrollTop;
+        this._areaLocation.x1 += _scrollDelta.x - scrollPosition.x;
+        this._areaLocation.y1 += _scrollDelta.y - scrollPosition.y;
+        _scrollDelta.x = scrollPosition.x;
+        _scrollDelta.y = scrollPosition.y;
 
         // The area needs to be set back as the target-container has changed in its position
         this._setupSelectionArea();
@@ -528,8 +574,11 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
 
     _recalculateSelectionAreaRect(): void {
         const {_scrollSpeed, _areaLocation, _targetElement, _options} = this;
-        const {scrollTop, scrollHeight, clientHeight, scrollLeft, scrollWidth, clientWidth} = _targetElement as Element;
         const _targetRect = this._targetRect as DOMRect;
+        const scrollPosition = this._scrollController.getScrollPosition(_targetElement as Element);
+        const clientSize = this._scrollController.getClientSize(_targetElement as Element);
+        const scrollSize = this._scrollController.getScrollSize(_targetElement as Element);
+        const alwaysScroll = this._scrollController.alwaysScroll;
 
         const {x1, y1} = _areaLocation;
         let {x2, y2} = _areaLocation;
@@ -537,20 +586,20 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         const {behaviour: {scrolling: {startScrollMargins}}} = _options;
 
         if (x2 < _targetRect.left + startScrollMargins.x) {
-            _scrollSpeed.x = scrollLeft ? -abs(_targetRect.left - x2 + startScrollMargins.x) : 0;
+            _scrollSpeed.x = (scrollPosition.x || alwaysScroll) ? -abs(_targetRect.left - x2 + startScrollMargins.x) : 0;
             x2 = x2 < _targetRect.left ? _targetRect.left : x2;
         } else if (x2 > _targetRect.right - startScrollMargins.x) {
-            _scrollSpeed.x = scrollWidth - scrollLeft - clientWidth ? abs(_targetRect.left + _targetRect.width - x2 - startScrollMargins.x) : 0;
+            _scrollSpeed.x = (scrollSize.width - scrollPosition.x - clientSize.width || alwaysScroll) ? abs(_targetRect.left + _targetRect.width - x2 - startScrollMargins.x) : 0;
             x2 = x2 > _targetRect.right ? _targetRect.right : x2;
         } else {
             _scrollSpeed.x = 0;
         }
 
         if (y2 < _targetRect.top + startScrollMargins.y) {
-            _scrollSpeed.y = scrollTop ? -abs(_targetRect.top - y2 + startScrollMargins.y) : 0;
+            _scrollSpeed.y = (scrollPosition.y || alwaysScroll) ? -abs(_targetRect.top - y2 + startScrollMargins.y) : 0;
             y2 = y2 < _targetRect.top ? _targetRect.top : y2;
         } else if (y2 > _targetRect.bottom - startScrollMargins.y) {
-            _scrollSpeed.y = scrollHeight - scrollTop - clientHeight ? abs(_targetRect.top + _targetRect.height - y2 - startScrollMargins.y) : 0;
+            _scrollSpeed.y = (scrollSize.height - scrollPosition.y - clientSize.height || alwaysScroll) ? abs(_targetRect.top + _targetRect.height - y2 - startScrollMargins.y) : 0;
             y2 = y2 > _targetRect.bottom ? _targetRect.bottom : y2;
         } else {
             _scrollSpeed.y = 0;

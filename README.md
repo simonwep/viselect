@@ -48,6 +48,91 @@
   <img height="100" alt="demo gif" src="https://github.com/user-attachments/assets/7700280d-f388-4c49-bce6-391fb5e338e7">
 </p>
 
+### Forked Change
+
+viselect now supports virtual scrolling. You can customize scroll position retrieval and setting methods through the `scrollController` option:
+
+```js
+import SelectionArea from '@knotx/viselect';
+
+// Create a selection area with virtual scrolling support
+const selection = new SelectionArea({
+  // Other options...
+  
+  // Custom scroll controller
+  scrollController: {
+    // Custom method to get scroll position
+    getScrollPosition: (element) => {
+      // If element is a virtual scroll container, return virtual scroll position
+      if (element.classList.contains('virtual-scroll-container')) {
+        return {
+          x: yourVirtualScrollInstance.scrollLeft,
+          y: yourVirtualScrollInstance.scrollTop
+        };
+      }
+      
+      // Otherwise return native scroll position
+      return {
+        x: element.scrollLeft,
+        y: element.scrollTop
+      };
+    },
+    
+    // Custom method to set scroll position
+    setScrollPosition: (element, position) => {
+      // If element is a virtual scroll container, set virtual scroll position
+      if (element.classList.contains('virtual-scroll-container')) {
+        if (position.x !== undefined) {
+          yourVirtualScrollInstance.scrollLeft = position.x;
+        }
+        if (position.y !== undefined) {
+          yourVirtualScrollInstance.scrollTop = position.y;
+        }
+        return;
+      }
+      
+      // Otherwise set native scroll position
+      if (position.x !== undefined) {
+        element.scrollLeft = position.x;
+      }
+      if (position.y !== undefined) {
+        element.scrollTop = position.y;
+      }
+    },
+    
+    // Custom method to get scroll size (total scrollable area)
+    getScrollSize: (element) => {
+      if (element.classList.contains('virtual-scroll-container')) {
+        return {
+          width: yourVirtualScrollInstance.scrollWidth,
+          height: yourVirtualScrollInstance.scrollHeight
+        };
+      }
+      
+      return {
+        width: element.scrollWidth,
+        height: element.scrollHeight
+      };
+    },
+    
+    // Custom method to get client size (visible area)
+    getClientSize: (element) => {
+      if (element.classList.contains('virtual-scroll-container')) {
+        return {
+          width: yourVirtualScrollInstance.clientWidth,
+          height: yourVirtualScrollInstance.clientHeight
+        };
+      }
+      
+      return {
+        width: element.clientWidth,
+        height: element.clientHeight
+      };
+    }
+  }
+});
+```
+
 ### Features 🤘
 
 * 🌟 Modern bundle

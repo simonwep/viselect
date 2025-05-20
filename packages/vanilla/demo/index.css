@@ -38,7 +38,8 @@ body,
     margin-bottom: 3em;
 }
 
-#root .container.red {
+#root .container.red,
+#root .container.gold .content {
     display: grid;
     grid-template-columns: repeat(28, 1fr);
     grid-gap: 0.4em;
@@ -50,7 +51,9 @@ body,
     margin-bottom: 3em;
 }
 
-#root .container.red > div {
+#root .container.red > div,
+#root .container.gold > div,
+#root .container.gold .content > div {
     margin: 0;
 }
 
@@ -79,8 +82,24 @@ body,
     border: 2px solid rgba(0, 0, 0, 0.075);
 }
 
+#root .container.gold div.selected {
+    background: gold;
+    border: 2px solid rgba(0, 0, 0, 0.075);
+}
+
 .selection-area {
     background: rgba(46, 115, 252, 0.11);
     border: 1px solid rgba(98, 155, 255, 0.85);
     border-radius: 0.15em;
+}
+
+
+#root .container.gold {
+    overflow: hidden;
+}
+
+#root .container.gold .content {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
 }

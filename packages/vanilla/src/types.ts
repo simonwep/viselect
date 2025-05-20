@@ -52,13 +52,18 @@ export interface Coordinates {
     y: number;
 }
 
+export interface Dimensions {
+    width: number;
+    height: number;
+}
+
 export type TapMode = 'touch' | 'native';
 export type OverlapMode = 'keep' | 'drop' | 'invert';
 
 export interface Scrolling {
     speedDivider: number;
     manualSpeed: number;
-    startScrollMargins: {x: number, y: number};
+    startScrollMargins: Coordinates;
 }
 
 export interface SingleTap {
@@ -81,6 +86,17 @@ export interface Behaviour {
     triggers: Trigger[];
 }
 
+export interface ScrollController {
+    getScrollPosition: (element: Element) => Coordinates;
+    setScrollPosition: (element: Element, position: Partial<Coordinates>) => void;
+    getScrollSize: (element: Element) => Dimensions;
+    getClientSize: (element: Element) => Dimensions;
+    /**
+     * default: false
+     */
+    alwaysScroll?: boolean;
+}
+
 export interface SelectionOptions {
     selectionAreaClass: string;
     selectionContainerClass: string | undefined;
@@ -98,4 +114,11 @@ export interface SelectionOptions {
 
 export type PartialSelectionOptions = DeepPartial<Omit<SelectionOptions, 'document'>> & {
     document?: Document;
+    scrollController?: {
+        getScrollPosition?: (element: Element) => Coordinates;
+        setScrollPosition?: (element: Element, position: Partial<Coordinates>) => void;
+        getScrollSize?: (element: Element) => Dimensions;
+        getClientSize?: (element: Element) => Dimensions;
+        alwaysScroll?: boolean;
+    };
 };
