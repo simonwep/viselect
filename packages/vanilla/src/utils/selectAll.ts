@@ -8,7 +8,7 @@ export type SelectAllSelectors = (string | Element)[] | string | Element;
  * @param doc
  * @returns {Array} Array of DOM-Nodes.
  */
-export const selectAll = (selector: SelectAllSelectors, doc: Document = document): Element[] =>
+export const selectAll = (selector: SelectAllSelectors, doc: Document | ShadowRoot = document): Element[] =>
     arrayify(selector)
         .map(item =>
             typeof item === 'string'

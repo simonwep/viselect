@@ -9,6 +9,20 @@ export type DeepPartial<T> =
 
 export type Quantify<T> = T[] | T;
 
+// Common interface for Document and ShadowRoot operations
+// Note: ShadowRoot doesn't have createElement - that's a Document method
+export interface DocumentOrShadowRoot {
+    querySelector(selectors: string): Element | null;
+    querySelectorAll(selectors: string): NodeListOf<Element>;
+    getElementById(elementId: string): HTMLElement | null;
+}
+
+// Extend Document and ShadowRoot to include the common interface
+declare global {
+    interface Document extends DocumentOrShadowRoot {}
+    interface ShadowRoot extends DocumentOrShadowRoot {}
+}
+
 export interface ScrollEvent extends MouseEvent {
     deltaY: number;
     deltaX: number;
@@ -86,7 +100,7 @@ export interface SelectionOptions {
     selectionContainerClass: string | undefined;
     container: Quantify<string | HTMLElement>;
 
-    document: Document;
+    document: Document | ShadowRoot;
     selectables: Quantify<string>;
 
     startAreas: Quantify<string | HTMLElement>;
@@ -97,5 +111,5 @@ export interface SelectionOptions {
 }
 
 export type PartialSelectionOptions = DeepPartial<Omit<SelectionOptions, 'document'>> & {
-    document?: Document;
+    document?: Document | ShadowRoot;
 };

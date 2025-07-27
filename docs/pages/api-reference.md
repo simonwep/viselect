@@ -304,7 +304,7 @@ interface SelectionOptions {
   selectionAreaClass: string;
   selectionContainerClass: string | undefined;
   container: Quantify<string | HTMLElement>;
-  document: Document;
+  document: Document | ShadowRoot;
   selectables: Quantify<string>;
   startAreas: Quantify<string | HTMLElement>;
   boundaries: Quantify<string | HTMLElement>;
@@ -317,9 +317,12 @@ interface SelectionOptions {
 
 Type of what can be passed to the `SelectionArea` constructor.
 
+> [!NOTE]
+> The `document` property supports both `Document` and `ShadowRoot` types, allowing you to use Viselect within shadow DOM components. Note that while ShadowRoot is used for querying elements, element creation still happens through the Document interface.
+
 ```typescript
 type PartialSelectionOptions = DeepPartial<Omit<SelectionOptions, 'document'>> & {
-  document?: Document;
+  document?: Document | ShadowRoot;
 };
 ```
 

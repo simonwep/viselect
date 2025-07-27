@@ -23,6 +23,36 @@ const makeSelectionStore = (stored: Element[] = []): SelectionStore => ({
     changed: {added: [], removed: []}
 });
 
+// Helper function to get the scrolling element from a document or shadow root
+const getScrollingElement = (doc: Document | ShadowRoot): Element => {
+    if ('scrollingElement' in doc && doc.scrollingElement) {
+        return doc.scrollingElement;
+    }
+    
+    // For shadow roots, we need to find the scrolling element within the shadow DOM
+    if (doc instanceof ShadowRoot) {
+        // Try to find a scrollable element within the shadow root
+        const scrollableElement = doc.querySelector('[style*="overflow"], [style*="scroll"]') as Element;
+        if (scrollableElement) {
+            return scrollableElement;
+        }
+        // Fallback to the host element
+        return doc.host;
+    }
+    
+    // For regular documents, fallback to body
+    return doc.body;
+};
+
+// Helper function to get the document from a document or shadow root
+const getDocument = (doc: Document | ShadowRoot): Document => {
+    if (doc instanceof Document) {
+        return doc;
+    }
+    // For shadow roots, get the document from the host element
+    return doc.host.ownerDocument || window.document;
+};
+
 export default class SelectionArea extends EventTarget<SelectionEvents> {
     public static version = VERSION;
 
@@ -116,9 +146,19 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             }
         }
 
-        const {document, selectionAreaClass, selectionContainerClass} = this._options;
-        this._area = document.createElement('div');
-        this._clippingElement = document.createElement('div');
+        const {document: doc, selectionAreaClass, selectionContainerClass} = this._options;
+        
+        // Ensure we have a valid document or shadow root
+        if (!doc) {
+            throw new Error('No document or shadow root provided.');
+        }
+        
+        // For element creation, we always need to use the document
+        // ShadowRoot doesn't have createElement - it's a Document method
+        const documentForCreation = doc instanceof Document ? doc : doc.host.ownerDocument || window.document;
+        
+        this._area = documentForCreation.createElement('div');
+        this._clippingElement = documentForCreation.createElement('div');
         this._clippingElement.appendChild(this._area);
 
         this._area.classList.add(selectionAreaClass);
@@ -153,19 +193,30 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _toggleStartEvents(activate = true): void {
-        const {document, features} = this._options;
+        const {document: doc, features} = this._options;
         const fn = activate ? on : off;
+        
+        // For shadow roots, we need to bind events to the shadow root itself
+        // For regular documents, we bind to the document
+        const eventTarget = doc instanceof ShadowRoot ? doc : getDocument(doc);
 
-        fn(document, 'mousedown', this._onTapStart);
+        fn(eventTarget, 'mousedown', this._onTapStart);
 
         if (features.touch) {
-            fn(document, 'touchstart', this._onTapStart, {passive: false});
+            fn(eventTarget, 'touchstart', this._onTapStart, {passive: false});
         }
     }
 
     _onTapStart(evt: MouseEvent | TouchEvent, silent = false): void {
+        
         const {x, y, target} = simplifyEvent(evt);
-        const {document, startAreas, boundaries, features, behaviour} = this._options;
+        const {document: doc, startAreas, boundaries, features, behaviour} = this._options;
+        
+        // Ensure target is an HTMLElement before calling getBoundingClientRect
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+        
         const targetBoundingClientRect = target.getBoundingClientRect();
 
         if (evt instanceof MouseEvent && !matchesTrigger(evt, behaviour.triggers)) {
@@ -173,8 +224,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         }
 
         // Find start-areas and boundaries
-        const resolvedStartAreas = selectAll(startAreas, document);
-        const resolvedBoundaries = selectAll(boundaries, document);
+        const resolvedStartAreas = selectAll(startAreas, doc);
+        const resolvedBoundaries = selectAll(boundaries, doc);
 
         // Check in which container the user currently acts
         this._targetElement = resolvedBoundaries.find(el =>
@@ -197,16 +248,24 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         this._areaLocation = {x1: x, y1: y, x2: 0, y2: 0};
 
         // Lock scrolling in the target container
-        const scrollElement = document.scrollingElement ?? document.body;
+        const scrollElement = getScrollingElement(doc);
         this._scrollDelta = {x: scrollElement.scrollLeft, y: scrollElement.scrollTop};
 
         // To detect single-click
         this._singleClick = true;
         this.clearSelection(false, true);
 
-        on(document, ['touchmove', 'mousemove'], this._delayedTapMove, {passive: false});
-        on(document, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
-        on(document, 'scroll', this._onScroll);
+        // For shadow roots, we need to bind events to the shadow root itself
+        // For regular documents, we bind to the document
+        const eventTarget = doc instanceof ShadowRoot ? doc : getDocument(doc);
+        
+        // Also bind mouseup to the main document to catch events when mouse moves outside shadow root
+        const mainDocument = getDocument(doc);
+        
+        on(eventTarget, ['touchmove', 'mousemove'], this._delayedTapMove, {passive: false});
+        on(eventTarget, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
+        on(mainDocument, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
+        on(eventTarget, 'scroll', this._onScroll);
 
         if (features.deselectOnBlur) {
             this._targetBoundaryScrolled = false;
@@ -315,7 +374,14 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             css(this._area, 'display', 'block');
 
             // Append selection-area to the dom
-            selectAll(container, document)[0].appendChild(this._clippingElement);
+            // Use the same document context for finding the container
+            const containerElement = selectAll(container, this._options.document)[0];
+            if (containerElement) {
+                containerElement.appendChild(this._clippingElement);
+            } else {
+                console.warn('Container not found, falling back to document body');
+                getDocument(this._options.document).body.appendChild(this._clippingElement);
+            }
 
             this.resolveSelectables();
 
@@ -475,8 +541,9 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _onScroll(): void {
-        const {_scrollDelta, _options: {document}} = this;
-        const {scrollTop, scrollLeft} = document.scrollingElement ?? document.body;
+        const {_scrollDelta, _options: {document: doc}} = this;
+        const scrollElement = getScrollingElement(doc);
+        const {scrollTop, scrollLeft} = scrollElement;
 
         // Adjust area start location
         this._areaLocation.x1 += _scrollDelta.x - scrollLeft;
@@ -576,15 +643,21 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _onTapStop(evt: MouseEvent | TouchEvent | null, silent: boolean): void {
-        const {document, features} = this._options;
+        const {document: doc, features} = this._options;
         const {_singleClick} = this;
 
         // Remove event handlers
         off(this._targetElement, 'scroll', this._onStartAreaScroll);
-        off(document, ['mousemove', 'touchmove'], this._delayedTapMove);
-        off(document, ['touchmove', 'mousemove'], this._onTapMove);
-        off(document, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
-        off(document, 'scroll', this._onScroll);
+        // For shadow roots, we need to unbind events from the shadow root itself
+        // For regular documents, we unbind from the document
+        const eventTarget = doc instanceof ShadowRoot ? doc : getDocument(doc);
+        const mainDocument = getDocument(doc);
+        
+        off(eventTarget, ['mousemove', 'touchmove'], this._delayedTapMove);
+        off(eventTarget, ['touchmove', 'mousemove'], this._onTapMove);
+        off(eventTarget, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
+        off(mainDocument, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
+        off(eventTarget, 'scroll', this._onScroll);
 
         // Keep selection until the next time
         this._keepSelection();
