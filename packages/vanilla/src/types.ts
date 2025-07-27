@@ -17,12 +17,6 @@ export interface DocumentOrShadowRoot {
     getElementById(elementId: string): HTMLElement | null;
 }
 
-// Extend Document and ShadowRoot to include the common interface
-declare global {
-    interface Document extends DocumentOrShadowRoot {}
-    interface ShadowRoot extends DocumentOrShadowRoot {}
-}
-
 export interface ScrollEvent extends MouseEvent {
     deltaY: number;
     deltaX: number;

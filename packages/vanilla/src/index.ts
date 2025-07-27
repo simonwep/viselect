@@ -379,7 +379,6 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             if (containerElement) {
                 containerElement.appendChild(this._clippingElement);
             } else {
-                console.warn('Container not found, falling back to document body');
                 getDocument(this._options.document).body.appendChild(this._clippingElement);
             }
 
