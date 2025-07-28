@@ -7,6 +7,7 @@ outline: deep
 import DemoSimple from '../demos/DemoSimple.vue';
 import DemoScrollable from '../demos/DemoScrollable.vue';
 import DemoShadowRoot from '../demos/DemoShadowRoot.vue';
+import DemoShadowRootTransformed from '../demos/DemoShadowRootTransformed.vue';
 </script>
 
 # Examples
@@ -43,12 +44,20 @@ Viselect fully supports shadow DOM. You can pass a `ShadowRoot` instance as the 
 
 > You can find the source code for this example [here](https://github.com/simonwep/viselect/blob/master/docs/demos/DemoShadowRoot.vue).
 
+## Shadow DOM with Transformed Elements
+
+Viselect supports shadow DOM with transformed/zoomed elements. This is particularly useful for applications with complex layouts where elements can be transformed and overflow their containers.
+
+<DemoShadowRootTransformed />
+
+> You can find the source code for this example [here](https://github.com/simonwep/viselect/blob/master/docs/demos/DemoShadowRootTransformed.vue).
+
 ### Key Points for Shadow Root Usage:
 
 1. **Pass the ShadowRoot**: Use the `document` option to specify the shadow root
-2. **Set startAreas**: Important to specify start areas within the shadow root context
+2. **Automatic Defaults**: The library automatically adjusts defaults for shadow DOM contexts
 3. **Element Creation**: ShadowRoot is used for querying, but element creation still happens through Document
-4. **Event Handling**: Events are properly bound to the shadow root for seamless interaction
+4. **Event Handling**: Events are properly bound to both shadow root and shadow host for seamless interaction
 
 ```ts
 import SelectionArea from '@viselect/vanilla';
@@ -75,7 +84,7 @@ shadowRoot.innerHTML = `
 const selection = new SelectionArea({
   selectables: ['.item'],
   boundaries: ['.container'],
-  startAreas: ['.container'], // Important for shadow root context
+  // startAreas is optional - defaults are automatically adjusted for shadow DOM
   document: shadowRoot, // Pass the shadow root here
   selectionAreaClass: 'selection-area'
 });

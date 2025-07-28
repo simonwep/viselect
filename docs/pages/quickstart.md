@@ -203,6 +203,7 @@ const selection = new SelectionArea({
   // document object - if you want to use it within an embed document (or iframe).
   // For shadow DOM support, pass the ShadowRoot instance here.
   // Both Document and ShadowRoot are supported.
+  // When using ShadowRoot, the library automatically adjusts defaults for shadow DOM contexts.
   document: window.document,
 
   // Query selectors for elements which can be selected.
