@@ -513,8 +513,10 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                             const transformedChild = transformedChildren[0];
                             this._selectables = this._selectables.filter(s => transformedChild.contains(s));
                         } else {
-                            // Fallback to original logic
-                            this._selectables = this._selectables.filter(s => this._targetElement!.contains(s));
+                            // For shadow roots, if the target element is the shadow host (wrapper),
+                            // we should NOT filter by containment because contains() doesn't work across shadow boundaries
+                            // The selectable elements are inside the shadow root, not the shadow host
+                            // Don't filter - keep all selectables when using shadow host as boundary
                         }
                     }
                 } else {
@@ -712,6 +714,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         const {x1, y1} = _areaLocation;
         let {x2, y2} = _areaLocation;
 
+
+
         const {behaviour: {scrolling: {startScrollMargins}}} = _options;
 
         if (x2 < _targetRect.left + startScrollMargins.x) {
@@ -751,7 +755,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         style.top = `${y}px`;
         style.width = `${width}px`;
         style.height = `${height}px`;
-        
+
 
     }
 
@@ -826,6 +830,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         for (let i = 0; i < _selectables.length; i++) {
             const node = _selectables[i];
             const nodeRect = node.getBoundingClientRect();
+
+
 
             // Check if the area intersects an element
             if (intersects(_areaRect, nodeRect, intersect)) {
