@@ -259,10 +259,11 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         // For regular documents, we bind to the document
         const eventTarget = doc instanceof ShadowRoot ? doc : getDocument(doc);
         
-        // Also bind mouseup to the main document to catch events when mouse moves outside shadow root
+        // Also bind to the main document to catch events when mouse moves outside shadow root
         const mainDocument = getDocument(doc);
         
         on(eventTarget, ['touchmove', 'mousemove'], this._delayedTapMove, {passive: false});
+        on(mainDocument, ['touchmove', 'mousemove'], this._delayedTapMove, {passive: false});
         on(eventTarget, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
         on(mainDocument, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
         on(eventTarget, 'scroll', this._onScroll);
@@ -348,7 +349,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _delayedTapMove(evt: MouseEvent | TouchEvent): void {
-        const {container, document, behaviour: {startThreshold}} = this._options;
+        const {container, behaviour: {startThreshold}} = this._options;
         const {x1, y1} = this._areaLocation; // Coordinates of the first "tap"
         const {x, y} = simplifyEvent(evt);
 
@@ -361,14 +362,22 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             // Different x and y threshold
             (typeof startThreshold === 'object' && abs(x - x1) >= (startThreshold as Coordinates).x || abs(y - y1) >= (startThreshold as Coordinates).y)
         ) {
-            off(document, ['mousemove', 'touchmove'], this._delayedTapMove, {passive: false});
+            // For shadow roots, we need to unbind from both shadow root and main document
+            const {document: doc} = this._options;
+            const eventTarget = doc instanceof ShadowRoot ? doc : getDocument(doc);
+            const mainDocument = getDocument(doc);
+            
+            off(eventTarget, ['mousemove', 'touchmove'], this._delayedTapMove, {passive: false});
+            off(mainDocument, ['mousemove', 'touchmove'], this._delayedTapMove, {passive: false});
 
             if (this._emitEvent('beforedrag', evt) === false) {
-                off(document, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
+                off(eventTarget, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
+                off(mainDocument, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
                 return;
             }
 
-            on(document, ['mousemove', 'touchmove'], this._onTapMove, {passive: false});
+            on(eventTarget, ['mousemove', 'touchmove'], this._onTapMove, {passive: false});
+            on(mainDocument, ['mousemove', 'touchmove'], this._onTapMove, {passive: false});
 
             // Make area element visible
             css(this._area, 'display', 'block');
@@ -653,7 +662,9 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         const mainDocument = getDocument(doc);
         
         off(eventTarget, ['mousemove', 'touchmove'], this._delayedTapMove);
+        off(mainDocument, ['mousemove', 'touchmove'], this._delayedTapMove);
         off(eventTarget, ['touchmove', 'mousemove'], this._onTapMove);
+        off(mainDocument, ['touchmove', 'mousemove'], this._onTapMove);
         off(eventTarget, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
         off(mainDocument, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
         off(eventTarget, 'scroll', this._onScroll);
