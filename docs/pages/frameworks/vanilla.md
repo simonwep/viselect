@@ -56,7 +56,7 @@ const selection = new SelectionArea({
   selectables: ['.container > div'], // Specifies the elements that can be selected
   boundaries: ['.container'], // Specifies the boundaries of each selection
 }).on('start', ({ store, event }) => {
-  if (!event.ctrlKey && !event.metaKey) { // Clear selection if no modifier key is pressed
+  if (!event.ctrlKey && !event.metaKey && !event.shiftKey) { // Clear selection if no modifier key is pressed
     store.stored.forEach(el => el.classList.remove('selected'));
     selection.clearSelection();
   }
