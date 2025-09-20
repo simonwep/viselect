@@ -371,7 +371,7 @@ interface SelectionEvent {
 }
 ```
 
-- `event` - The original event that triggered the selection, may be `null` if manually triggered.
+- `event` - The original event that triggered the selection, may be `null` if manually triggered. Set `quiet` to true in manual selection functions to prevent firing the event. (see `clearSelection`, `select` or `unselect`)
 - `store` - The current state of the selection store.
 - `selection` - The selection area instance.
 
