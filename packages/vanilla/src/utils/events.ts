@@ -58,5 +58,18 @@ export const simplifyEvent = (evt: any): {
     y: number;
 } => {
     const {clientX, clientY, target} = evt.touches?.[0] ?? evt;
-    return {x: clientX, y: clientY, target};
+    
+    // Ensure target is an HTMLElement
+    let htmlTarget: HTMLElement;
+    if (target instanceof HTMLElement) {
+        htmlTarget = target;
+    } else if (target instanceof Element) {
+        // If it's an Element but not HTMLElement, try to cast it
+        htmlTarget = target as HTMLElement;
+    } else {
+        // Fallback to document.body if target is not a valid element
+        htmlTarget = document.body;
+    }
+    
+    return {x: clientX, y: clientY, target: htmlTarget};
 };
