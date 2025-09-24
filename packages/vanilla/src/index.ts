@@ -418,24 +418,34 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             // Continuous scrolling
             this._scrollingActive = true;
 
+            // Store scroll positions to calculate deltas between frames.
+            let lastScrollTop = _targetElement.scrollTop;
+            let lastScrollLeft = _targetElement.scrollLeft;
+
             const scroll = () => {
-                if (!_scrollSpeed.x && !_scrollSpeed.y) {
-                    this._scrollingActive = false;
+                if (!this._scrollingActive) {
                     return;
                 }
 
-                // Reduce velocity, use ceil in both directions to scroll at least 1px per frame
-                const {scrollTop, scrollLeft} = _targetElement;
-
                 if (_scrollSpeed.y) {
                     _targetElement.scrollTop += ceil(_scrollSpeed.y / speedDivider);
-                    _areaLocation.y1 -= _targetElement.scrollTop - scrollTop;
                 }
 
                 if (_scrollSpeed.x) {
                     _targetElement.scrollLeft += ceil(_scrollSpeed.x / speedDivider);
-                    _areaLocation.x1 -= _targetElement.scrollLeft - scrollLeft;
                 }
+
+                // Measure the actual scroll delta since the last frame.
+                const deltaY = _targetElement.scrollTop - lastScrollTop;
+                const deltaX = _targetElement.scrollLeft - lastScrollLeft;
+
+                // Compensate the selection area's origin by the actual scroll delta.
+                _areaLocation.y1 -= deltaY;
+                _areaLocation.x1 -= deltaX;
+
+                // Store the current scroll position for the next frame's calculation.
+                lastScrollTop = _targetElement.scrollTop;
+                lastScrollLeft = _targetElement.scrollLeft;
 
                 /**
                  * We changed the start coordinates -> redraw the selection-area
@@ -445,11 +455,16 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                 _frame.next(evt);
 
                 // Keep scrolling even if the user stops to move his pointer
-                requestAnimationFrame(scroll);
+                if (_scrollSpeed.x || _scrollSpeed.y) {
+                    requestAnimationFrame(scroll);
+                } else {
+                    this._scrollingActive = false;
+                }
             };
 
             requestAnimationFrame(scroll);
-        } else {
+
+        } else if (!this._scrollingActive) {
 
             /**
              * Perform redrawing only if scrolling is not active.
