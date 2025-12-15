@@ -18,7 +18,7 @@ import DemoScrollable from '../demos/DemoScrollable.vue';
 
 A single, simple box with a standard behaviour as you know it from your trusty file explorer.
 Press `Ctrl` / `Cmd` to select multiple items, or deselect items by clicking on them again.
-Press `Shift` to select a range of items after selecting one ore more before.
+Press `Shift` to select a range of items after selecting one or more before.
 
 <DemoSimple />
 
