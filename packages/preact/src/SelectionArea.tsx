@@ -1,7 +1,7 @@
 import VanillaSelectionArea from '@viselect/vanilla';
 import {SelectionEvents, PartialSelectionOptions} from '@viselect/vanilla';
-import {createContext, createRef, FunctionalComponent, JSX} from 'preact';
-import {useEffect, useContext, useState} from 'preact/hooks';
+import {createContext, JSX, FunctionalComponent} from 'preact';
+import {useEffect, useContext, useState, useMemo, useRef} from 'preact/hooks';
 
 export interface SelectionAreaProps extends PartialSelectionOptions, JSX.HTMLAttributes<HTMLDivElement> {
     id?: string;
@@ -18,23 +18,54 @@ const SelectionContext = createContext<VanillaSelectionArea | undefined>(undefin
 export const useSelection = () => useContext(SelectionContext);
 
 export const SelectionArea: FunctionalComponent<SelectionAreaProps> = props => {
+    const {
+        boundaries,
+        document: doc,
+        selectables,
+        startAreas,
+        container,
+        behaviour,
+        features,
+        onBeforeStart,
+        onBeforeDrag,
+        onStart,
+        onMove,
+        onStop,
+        className,
+        id,
+        children,
+        ...rest
+    } = props;
+
     const [instance, setInstance] = useState<VanillaSelectionArea | undefined>(undefined);
-    const root = createRef<HTMLDivElement>();
+    const root = useRef<HTMLDivElement>(null);
+
+    // Use refs for callbacks to avoid recreating the instance when only callbacks change
+    const callbacksRef = useRef({onBeforeStart, onBeforeDrag, onStart, onMove, onStop});
+    callbacksRef.current = {onBeforeStart, onBeforeDrag, onStart, onMove, onStop};
+
+    // Stable serialization of object props for dependency comparison
+    const behaviourKey = useMemo(() => JSON.stringify(behaviour), [behaviour]);
+    const featuresKey = useMemo(() => JSON.stringify(features), [features]);
 
     useEffect(() => {
-        /* eslint-disable @typescript-eslint/no-unused-vars */
-        const {boundaries = root.current, onBeforeStart, onBeforeDrag, onStart, onMove, onStop, ...opt} = props;
+        const boundaryElement = boundaries ?? root.current;
 
         const selection = new VanillaSelectionArea({
-            boundaries: boundaries as HTMLElement,
-            ...opt
+            boundaries: boundaryElement as HTMLElement,
+            document: doc,
+            selectables,
+            startAreas,
+            container,
+            behaviour,
+            features
         });
 
-        selection.on('beforestart', evt => props.onBeforeStart?.(evt));
-        selection.on('beforedrag', evt => props.onBeforeDrag?.(evt));
-        selection.on('start', evt => props.onStart?.(evt));
-        selection.on('move', evt => props.onMove?.(evt));
-        selection.on('stop', evt => props.onStop?.(evt));
+        selection.on('beforestart', evt => callbacksRef.current.onBeforeStart?.(evt));
+        selection.on('beforedrag', evt => callbacksRef.current.onBeforeDrag?.(evt));
+        selection.on('start', evt => callbacksRef.current.onStart?.(evt));
+        selection.on('move', evt => callbacksRef.current.onMove?.(evt));
+        selection.on('stop', evt => callbacksRef.current.onStop?.(evt));
 
         setInstance(selection);
 
@@ -42,15 +73,15 @@ export const SelectionArea: FunctionalComponent<SelectionAreaProps> = props => {
             selection.destroy();
             setInstance(undefined);
         };
-    }, []);
+    }, [boundaries, doc, selectables, startAreas, container, behaviourKey, featuresKey]);
 
     return (
         <SelectionContext.Provider value={instance}>
-            {props.boundaries ? (
-                props.children
+            {boundaries ? (
+                children
             ) : (
-                <div ref={root} className={props.className} id={props.id}>
-                    {props.children}
+                <div ref={root} className={className} id={id} {...rest}>
+                    {children}
                 </div>
             )}
         </SelectionContext.Provider>
