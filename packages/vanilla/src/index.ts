@@ -65,45 +65,39 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         super();
 
         this._options = {
-            selectionAreaClass: 'selection-area',
-            selectionContainerClass: undefined,
-            selectables: [],
-            document: window.document,
-            startAreas: ['html'],
-            boundaries: ['html'],
-            container: 'body',
-            ...opt,
+            selectionAreaClass: opt.selectionAreaClass ?? 'selection-area',
+            selectionContainerClass: opt.selectionContainerClass ?? undefined,
+            selectables: opt.selectables ?? [],
+            document: opt.document ?? window.document,
+            startAreas: opt.startAreas ?? ['html'],
+            boundaries: opt.boundaries ?? ['html'],
+            container: opt.container ?? 'body',
 
             behaviour: {
-                overlap: 'invert',
-                intersect: 'touch',
-                triggers: [0],
-                ...opt.behaviour,
+                overlap: opt.behaviour?.overlap ?? 'invert',
+                intersect: opt.behaviour?.intersect ?? 'touch',
+                triggers: opt.behaviour?.triggers ?? [0],
                 startThreshold: opt.behaviour?.startThreshold ?
                     typeof opt.behaviour.startThreshold === 'number' ?
                         opt.behaviour.startThreshold :
                         {x: 10, y: 10, ...opt.behaviour.startThreshold} : {x: 10, y: 10},
                 scrolling: {
-                    speedDivider: 10,
-                    manualSpeed: 750,
-                    ...opt.behaviour?.scrolling,
+                    speedDivider: opt.behaviour?.scrolling?.speedDivider ?? 10,
+                    manualSpeed: opt.behaviour?.scrolling?.manualSpeed ?? 750,
                     startScrollMargins: {
-                        x: 0,
-                        y: 0,
-                        ...opt.behaviour?.scrolling?.startScrollMargins,
+                        x: opt.behaviour?.scrolling?.startScrollMargins?.x ?? 0,
+                        y: opt.behaviour?.scrolling?.startScrollMargins?.y ?? 0
                     }
                 }
             },
 
             features: {
-                range: true,
-                touch: true,
-                deselectOnBlur: false,
-                ...opt.features,
+                range: opt.features?.range ?? true,
+                touch: opt.features?.touch ?? true,
+                deselectOnBlur: opt.features?.deselectOnBlur ?? false,
                 singleTap: {
-                    allow: true,
-                    intersect: 'native',
-                    ...opt.features?.singleTap,
+                    allow: opt.features?.singleTap?.allow ?? true,
+                    intersect: opt.features?.singleTap?.intersect ?? 'native',
                 }
             }
         };
