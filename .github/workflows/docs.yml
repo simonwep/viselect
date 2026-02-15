@@ -1,6 +1,9 @@
 name: Deploy Docs
 
-on: ["push", "pull_request"]
+on:
+  push:
+    branches:
+      - master
 
 permissions:
   contents: read
@@ -14,22 +17,22 @@ concurrency:
 jobs:
   build:
     name: Build docs
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 9.15.0
+          version: 10.27.0
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
 
       - name: Setup Pages
@@ -45,13 +48,13 @@ jobs:
         run: pnpm docs:build
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: docs/.vitepress/dist
 
   deploy:
     name: Deploy
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: build
     if: github.ref == 'refs/heads/master'
     environment:

@@ -2,30 +2,32 @@ name: Main
 
 on: ["push", "pull_request"]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     name: Build, test and eventually publish
-    runs-on: ubuntu-22.04
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 9.15.0
+          version: 10.27.0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           registry-url: https://registry.npmjs.org
-          node-version: 22
-          cache: 'pnpm'
+          node-version: 24
+          cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Setup ESLint cache
         uses: actions/cache@v4
@@ -44,8 +46,6 @@ jobs:
 
       - name: Publish
         if: startsWith(github.event.ref, 'refs/tags/v')
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx lerna publish from-package --yes
 
   publish_release:
@@ -55,10 +55,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
+        with:
+          registry-url: https://registry.npmjs.org
+          node-version: 24
+          cache: pnpm
 
       - name: Extract changes
         id: changelog

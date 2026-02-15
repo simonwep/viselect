@@ -3,6 +3,7 @@ import ts from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import vue from 'eslint-plugin-vue';
 import tsParser from '@typescript-eslint/parser';
+import globals from 'globals';
 import preferArrowFunctions from 'eslint-plugin-prefer-arrow-functions';
 
 export default [
@@ -10,6 +11,7 @@ export default [
   ...ts.configs.recommended,
   ...vue.configs['flat/recommended'],
   react.configs.flat.recommended,
+  react.configs.flat['jsx-runtime'],
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.mjs'],
     languageOptions: {
@@ -19,11 +21,15 @@ export default [
         sourceType: 'module',
         ecmaFeatures: {
           jsx: true
+        },
+        globals: {
+          ...globals.browser,
         }
       }
     },
     plugins: {
-      'prefer-arrow-functions': preferArrowFunctions
+      'prefer-arrow-functions': preferArrowFunctions,
+      react
     },
     settings: {
       react: {
@@ -47,6 +53,9 @@ export default [
       parserOptions: {
         extraFileExtensions: ['.vue'],
         parser: tsParser
+      },
+      globals: {
+        ...globals.browser,
       }
     },
     rules: {
