@@ -1,26 +1,26 @@
-import {EventTarget} from './EventEmitter';
-import type {AreaLocation, Coordinates, ScrollEvent, SelectionEvents, SelectionOptions, SelectionStore} from './types';
-import {PartialSelectionOptions} from './types';
-import {css} from './utils/css';
-import {domRect} from './utils/domRect';
-import {Frames, frames} from './utils/frames';
-import {intersects} from './utils/intersects';
-import {isSafariBrowser, isTouchDevice} from './utils/browser';
-import {on, off, simplifyEvent} from './utils/events';
-import {selectAll, SelectAllSelectors} from './utils/selectAll';
-import {matchesTrigger} from './utils/matchesTrigger';
+import { EventTarget } from './EventEmitter';
+import type { AreaLocation, Coordinates, ScrollEvent, SelectionEvents, SelectionOptions, SelectionStore } from './types';
+import { PartialSelectionOptions } from './types';
+import { css } from './utils/css';
+import { domRect } from './utils/domRect';
+import { Frames, frames } from './utils/frames';
+import { intersects } from './utils/intersects';
+import { isSafariBrowser, isTouchDevice } from './utils/browser';
+import { on, off, simplifyEvent } from './utils/events';
+import { selectAll, SelectAllSelectors } from './utils/selectAll';
+import { matchesTrigger } from './utils/matchesTrigger';
 
 // Re-export types
 export * from './types';
 
 // Some var shorting for better compression and readability
-const {abs, max, min, ceil} = Math;
+const { abs, max, min, ceil } = Math;
 
 const makeSelectionStore = (stored: Element[] = []): SelectionStore => ({
     stored,
     selected: [],
     touched: [],
-    changed: {added: [], removed: []}
+    changed: { added: [], removed: [] }
 });
 
 // Helper function to get the scrolling element from a document or shadow root
@@ -28,7 +28,7 @@ const getScrollingElement = (doc: Document | ShadowRoot): Element => {
     if ('scrollingElement' in doc && doc.scrollingElement) {
         return doc.scrollingElement;
     }
-    
+
     // For shadow roots, we need to find the scrolling element within the shadow DOM
     if (doc instanceof ShadowRoot) {
         // Try to find a scrollable element within the shadow root
@@ -39,7 +39,7 @@ const getScrollingElement = (doc: Document | ShadowRoot): Element => {
         // Fallback to the host element
         return doc.host;
     }
-    
+
     // For regular documents, fallback to body
     return doc.body;
 };
@@ -75,7 +75,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     private _latestElement?: Element;
 
     // Dynamically constructed area rect
-    private _areaLocation: AreaLocation = {y1: 0, x2: 0, y2: 0, x1: 0};
+    private _areaLocation: AreaLocation = { y1: 0, x2: 0, y2: 0, x1: 0 };
     private _areaRect = domRect();
 
     // If a single click is being performed, it's a single-click until the user dragged the mouse
@@ -85,11 +85,11 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     // Required data for scrolling
     private _scrollAvailable = true;
     private _scrollingActive = false;
-    private _scrollSpeed: Coordinates = {x: 0, y: 0};
-    private _scrollDelta: Coordinates = {x: 0, y: 0};
+    private _scrollSpeed: Coordinates = { x: 0, y: 0 };
+    private _scrollDelta: Coordinates = { x: 0, y: 0 };
 
     // Required for keydown scrolling
-    private _lastMousePosition = {x: 0, y: 0};
+    private _lastMousePosition = { x: 0, y: 0 };
 
     constructor(opt: PartialSelectionOptions) {
         super();
@@ -112,7 +112,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                 startThreshold: opt.behaviour?.startThreshold ?
                     typeof opt.behaviour.startThreshold === 'number' ?
                         opt.behaviour.startThreshold :
-                        {x: 10, y: 10, ...opt.behaviour.startThreshold} : {x: 10, y: 10},
+                        { x: 10, y: 10, ...opt.behaviour.startThreshold } : { x: 10, y: 10 },
                 scrolling: {
                     speedDivider: 10,
                     manualSpeed: 750,
@@ -145,7 +145,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             if (startAreasArray.length === 1 && startAreasArray[0] === 'html') {
                 this._options.startAreas = [this._options.document.host as HTMLElement];
             }
-            
+
             // If boundaries is still the default 'html', replace with shadow root host
             const boundariesArray = Array.isArray(this._options.boundaries) ? this._options.boundaries : [this._options.boundaries];
             if (boundariesArray.length === 1 && boundariesArray[0] === 'html') {
@@ -161,17 +161,17 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             }
         }
 
-        const {document: doc, selectionAreaClass, selectionContainerClass} = this._options;
-        
+        const { document: doc, selectionAreaClass, selectionContainerClass } = this._options;
+
         // Ensure we have a valid document or shadow root
         if (!doc) {
             throw new Error('No document or shadow root provided.');
         }
-        
+
         // For element creation, we always need to use the document
         // ShadowRoot doesn't have createElement - it's a Document method
         const documentForCreation = doc instanceof Document ? doc : doc.host.ownerDocument || window.document;
-        
+
         this._area = documentForCreation.createElement('div');
         this._clippingElement = documentForCreation.createElement('div');
         this._clippingElement.appendChild(this._area);
@@ -208,9 +208,9 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _toggleStartEvents(activate = true): void {
-        const {document: doc, features} = this._options;
+        const { document: doc, features } = this._options;
         const fn = activate ? on : off;
-        
+
         // For shadow roots, we need to bind events to the shadow root itself
         // For regular documents, we bind to the document
         const eventTarget = doc instanceof ShadowRoot ? doc : getDocument(doc);
@@ -218,28 +218,28 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         fn(eventTarget, 'mousedown', this._onTapStart);
 
         if (features.touch) {
-            fn(eventTarget, 'touchstart', this._onTapStart, {passive: false});
+            fn(eventTarget, 'touchstart', this._onTapStart, { passive: false });
         }
-        
+
         // For shadow roots, also bind to the shadow host to capture clicks on the wrapper
         if (doc instanceof ShadowRoot) {
             fn(doc.host, 'mousedown', this._onTapStart);
             if (features.touch) {
-                fn(doc.host, 'touchstart', this._onTapStart, {passive: false});
+                fn(doc.host, 'touchstart', this._onTapStart, { passive: false });
             }
         }
     }
 
     _onTapStart(evt: MouseEvent | TouchEvent, silent = false): void {
-        
-        const {x, y, target} = simplifyEvent(evt);
-        const {document: doc, startAreas, boundaries, features, behaviour} = this._options;
-        
+
+        const { x, y, target } = simplifyEvent(evt);
+        const { document: doc, startAreas, boundaries, features, behaviour } = this._options;
+
         // Ensure target is an HTMLElement before calling getBoundingClientRect
         if (!(target instanceof HTMLElement)) {
             return;
         }
-        
+
         const targetBoundingClientRect = target.getBoundingClientRect();
 
         if (evt instanceof MouseEvent && !matchesTrigger(evt, behaviour.triggers)) {
@@ -249,14 +249,14 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         // Find start-areas and boundaries
         const resolvedStartAreas = selectAll(startAreas, doc);
         const resolvedBoundaries = selectAll(boundaries, doc);
-        
+
 
 
         // Check in which container the user currently acts
         this._targetElement = resolvedBoundaries.find(el =>
             intersects(el.getBoundingClientRect(), targetBoundingClientRect)
         );
-        
+
         // For shadow roots, if no target element found by intersection, 
         // try to find one that contains the clicked element
         if (doc instanceof ShadowRoot && !this._targetElement) {
@@ -274,7 +274,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         const evtPath = evt.composedPath();
         const targetStartArea = resolvedStartAreas.find(el => evtPath.includes(el));
         this._targetBoundary = resolvedBoundaries.find(el => evtPath.includes(el));
-        
+
         // For shadow roots with transformed elements, if we found a start area but no boundary,
         // try to find a boundary that contains the start area or is the parent of the start area
         if (doc instanceof ShadowRoot && targetStartArea && !this._targetBoundary) {
@@ -283,12 +283,12 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                 if (boundary.contains(targetStartArea)) {
                     return true;
                 }
-                
+
                 // Check if start area contains the boundary
                 if (targetStartArea.contains(boundary)) {
                     return true;
                 }
-                
+
                 // Check if they have a parent-child relationship
                 let parent = targetStartArea.parentElement;
                 while (parent) {
@@ -297,7 +297,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                     }
                     parent = parent.parentElement;
                 }
-                
+
                 return false;
             });
         }
@@ -310,25 +310,25 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             return;
         }
 
-        this._areaLocation = {x1: x, y1: y, x2: 0, y2: 0};
+        this._areaLocation = { x1: x, y1: y, x2: 0, y2: 0 };
 
         // Lock scrolling in the target container
         const scrollElement = getScrollingElement(doc);
-        this._scrollDelta = {x: scrollElement.scrollLeft, y: scrollElement.scrollTop};
+        this._scrollDelta = { x: scrollElement.scrollLeft, y: scrollElement.scrollTop };
 
         // To detect single-click
         this._singleClick = true;
-        this.clearSelection(false, true);
+        this.clearSelection(false, true, evt);
 
         // For shadow roots, we need to bind events to the shadow root itself
         // For regular documents, we bind to the document
         const eventTarget = doc instanceof ShadowRoot ? doc : getDocument(doc);
-        
+
         // Also bind to the main document to catch events when mouse moves outside shadow root
         const mainDocument = getDocument(doc);
-        
-        on(eventTarget, ['touchmove', 'mousemove'], this._delayedTapMove, {passive: false});
-        on(mainDocument, ['touchmove', 'mousemove'], this._delayedTapMove, {passive: false});
+
+        on(eventTarget, ['touchmove', 'mousemove'], this._delayedTapMove, { passive: false });
+        on(mainDocument, ['touchmove', 'mousemove'], this._delayedTapMove, { passive: false });
         on(eventTarget, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
         on(mainDocument, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
         on(eventTarget, 'scroll', this._onScroll);
@@ -340,7 +340,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _onSingleTap(evt: MouseEvent | TouchEvent): void {
-        const {singleTap: {intersect}, range} = this._options.features;
+        const { singleTap: { intersect }, range } = this._options.features;
         const e = simplifyEvent(evt);
         let target;
 
@@ -349,9 +349,9 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         } else if (intersect === 'touch') {
             this.resolveSelectables();
 
-            const {x, y} = e;
+            const { x, y } = e;
             target = this._selectables.find(v => {
-                const {right, left, top, bottom} = v.getBoundingClientRect();
+                const { right, left, top, bottom } = v.getBoundingClientRect();
                 return x < right && x > left && y < bottom && y > top;
             });
         }
@@ -374,7 +374,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                 target = target.parentElement;
             } else {
                 if (!this._targetBoundaryScrolled) {
-                    this.clearSelection();
+                    this.clearSelection(true, false, evt);
                 }
 
                 return;
@@ -383,7 +383,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         }
 
         // Grab the current store first in case it gets set back
-        const {stored} = this._selection;
+        const { stored } = this._selection;
         this._emitEvent('start', evt);
 
         if (evt.shiftKey && range && this._latestElement) {
@@ -398,7 +398,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                 (el.compareDocumentPosition(following) & 2)
             ), preceding, following];
 
-            this.select(rangeItems);
+            this.select(rangeItems, false, evt);
             this._latestElement = reference; // the latestElement is by default cleared in .select()
         } else if (
             stored.includes(target) && (
@@ -406,17 +406,17 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                 stored.every(v => this._selection.stored.includes(v))
             )
         ) {
-            this.deselect(target);
+            this.deselect(target, false, evt);
         } else {
-            this.select(target);
+            this.select(target, false, evt);
             this._latestElement = target;
         }
     }
 
     _delayedTapMove(evt: MouseEvent | TouchEvent): void {
-        const {container, behaviour: {startThreshold}} = this._options;
-        const {x1, y1} = this._areaLocation; // Coordinates of the first "tap"
-        const {x, y} = simplifyEvent(evt);
+        const { container, behaviour: { startThreshold } } = this._options;
+        const { x1, y1 } = this._areaLocation; // Coordinates of the first "tap"
+        const { x, y } = simplifyEvent(evt);
 
         // Check the pixel threshold
         if (
@@ -428,12 +428,12 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             (typeof startThreshold === 'object' && abs(x - x1) >= (startThreshold as Coordinates).x || abs(y - y1) >= (startThreshold as Coordinates).y)
         ) {
             // For shadow roots, we need to unbind from both shadow root and main document
-            const {document: docOpt1} = this._options;
+            const { document: docOpt1 } = this._options;
             const eventTarget = docOpt1 instanceof ShadowRoot ? docOpt1 : getDocument(docOpt1);
             const mainDocument = getDocument(docOpt1);
-            
-            off(eventTarget, ['mousemove', 'touchmove'], this._delayedTapMove, {passive: false});
-            off(mainDocument, ['mousemove', 'touchmove'], this._delayedTapMove, {passive: false});
+
+            off(eventTarget, ['mousemove', 'touchmove'], this._delayedTapMove, { passive: false });
+            off(mainDocument, ['mousemove', 'touchmove'], this._delayedTapMove, { passive: false });
 
             if (this._emitEvent('beforedrag', evt) === false) {
                 off(eventTarget, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
@@ -441,23 +441,23 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                 return;
             }
 
-            on(eventTarget, ['mousemove', 'touchmove'], this._onTapMove, {passive: false});
-            on(mainDocument, ['mousemove', 'touchmove'], this._onTapMove, {passive: false});
+            on(eventTarget, ['mousemove', 'touchmove'], this._onTapMove, { passive: false });
+            on(mainDocument, ['mousemove', 'touchmove'], this._onTapMove, { passive: false });
 
             // Make area element visible
             css(this._area, 'display', 'block');
 
             // Append selection-area to the dom
             // For shadow roots, append to the main document body to avoid transform issues
-            const {document: docOpt2} = this._options;
+            const { document: docOpt2 } = this._options;
             let containerElement = selectAll(container, docOpt2)[0];
-            
+
             // For shadow roots, always append to the main document body
             // to avoid transform coordinate system issues
             if (docOpt2 instanceof ShadowRoot) {
                 containerElement = getDocument(docOpt2).body;
             }
-            
+
             if (containerElement) {
                 containerElement.appendChild(this._clippingElement);
             } else {
@@ -480,10 +480,10 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
             if (this._scrollAvailable) {
 
                 // Detect mouse scrolling
-                on(this._targetElement, 'wheel', this._wheelScroll, {passive: false});
+                on(this._targetElement, 'wheel', this._wheelScroll, { passive: false });
 
                 // Detect keyboard scrolling
-                on(this._options.document, 'keydown', this._keyboardScroll, {passive: false});
+                on(this._options.document, 'keydown', this._keyboardScroll, { passive: false });
 
                 /**
                  * The selection-area will also cover another element
@@ -491,15 +491,15 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                  * that are in the current scrollable element. Now these are
                  * the only selectables instead of all.
                  */
-                
+
                 // Special handling for shadow roots with transformed elements
-                const {document: doc} = this._options;
+                const { document: doc } = this._options;
                 if (doc instanceof ShadowRoot) {
                     // For shadow roots, if we have a start area that's different from the boundary,
                     // we should filter based on the start area instead of the boundary
                     const resolvedStartAreas = selectAll(this._options.startAreas, doc);
                     const startArea = resolvedStartAreas[0];
-                    
+
                     if (startArea && startArea !== this._targetElement) {
                         this._selectables = this._selectables.filter(s => startArea.contains(s));
                     } else {
@@ -507,7 +507,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                         // we need to handle the case where selectables are in a transformed child
                         // Look for transformed elements within the target that might contain selectables
                         const transformedChildren = Array.from(this._targetElement!.querySelectorAll('[style*="transform"]'));
-                        
+
                         if (transformedChildren.length > 0) {
                             // Use the first transformed child as the containment reference
                             const transformedChild = transformedChildren[0];
@@ -523,7 +523,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                     // Original logic for regular documents
                     this._selectables = this._selectables.filter(s => this._targetElement!.contains(s));
                 }
-                
+
 
             }
 
@@ -537,7 +537,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _setupSelectionArea(): void {
-        const {_clippingElement, _targetElement, _area} = this;
+        const { _clippingElement, _targetElement, _area } = this;
         const tr = this._targetRect = _targetElement!.getBoundingClientRect();
 
         if (this._scrollAvailable) {
@@ -581,11 +581,11 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _onTapMove(evt: MouseEvent | TouchEvent): void {
-        const {_scrollSpeed, _areaLocation, _options, _frame} = this;
-        const {speedDivider} = _options.behaviour.scrolling;
+        const { _scrollSpeed, _areaLocation, _options, _frame } = this;
+        const { speedDivider } = _options.behaviour.scrolling;
         const _targetElement = this._targetElement as Element;
 
-        const {x, y} = simplifyEvent(evt);
+        const { x, y } = simplifyEvent(evt);
         _areaLocation.x2 = x;
         _areaLocation.y2 = y;
 
@@ -604,7 +604,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
                 }
 
                 // Reduce velocity, use ceil in both directions to scroll at least 1px per frame
-                const {scrollTop, scrollLeft} = _targetElement;
+                const { scrollTop, scrollLeft } = _targetElement;
 
                 if (_scrollSpeed.y) {
                     _targetElement.scrollTop += ceil(_scrollSpeed.y / speedDivider);
@@ -642,7 +642,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _handleMoveEvent(evt: MouseEvent | TouchEvent) {
-        const {features} = this._options;
+        const { features } = this._options;
 
         /**
          * - Prevent auto-refresh for when pulling down on touch devices.
@@ -654,9 +654,9 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _onScroll(): void {
-        const {_scrollDelta, _options: {document: doc}} = this;
+        const { _scrollDelta, _options: { document: doc } } = this;
         const scrollElement = getScrollingElement(doc);
-        const {scrollTop, scrollLeft} = scrollElement;
+        const { scrollTop, scrollLeft } = scrollElement;
 
         // Adjust area start location
         this._areaLocation.x1 += _scrollDelta.x - scrollLeft;
@@ -675,7 +675,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _wheelScroll(evt: ScrollEvent): void {
-        const {manualSpeed} = this._options.behaviour.scrolling;
+        const { manualSpeed } = this._options.behaviour.scrolling;
 
         // Consistent scrolling speed on all browsers
         const deltaY = evt.deltaY ? (evt.deltaY > 0 ? 1 : -1) : 0;
@@ -689,7 +689,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _keyboardScroll(evt: KeyboardEvent): void {
-        const {manualSpeed} = this._options.behaviour.scrolling;
+        const { manualSpeed } = this._options.behaviour.scrolling;
 
         const deltaX = evt.key === 'ArrowLeft' ? -1 : evt.key === 'ArrowRight' ? 1 : 0;
         const deltaY = evt.key === 'ArrowUp' ? -1 : evt.key === 'ArrowDown' ? 1 : 0;
@@ -707,16 +707,16 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _recalculateSelectionAreaRect(): void {
-        const {_scrollSpeed, _areaLocation, _targetElement, _options} = this;
-        const {scrollTop, scrollHeight, clientHeight, scrollLeft, scrollWidth, clientWidth} = _targetElement as Element;
+        const { _scrollSpeed, _areaLocation, _targetElement, _options } = this;
+        const { scrollTop, scrollHeight, clientHeight, scrollLeft, scrollWidth, clientWidth } = _targetElement as Element;
         const _targetRect = this._targetRect as DOMRect;
 
-        const {x1, y1} = _areaLocation;
-        let {x2, y2} = _areaLocation;
+        const { x1, y1 } = _areaLocation;
+        let { x2, y2 } = _areaLocation;
 
 
 
-        const {behaviour: {scrolling: {startScrollMargins}}} = _options;
+        const { behaviour: { scrolling: { startScrollMargins } } } = _options;
 
         if (x2 < _targetRect.left + startScrollMargins.x) {
             _scrollSpeed.x = scrollLeft ? -abs(_targetRect.left - x2 + startScrollMargins.x) : 0;
@@ -747,8 +747,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _redrawSelectionArea(): void {
-        const {x, y, width, height} = this._areaRect;
-        const {style} = this._area;
+        const { x, y, width, height } = this._areaRect;
+        const { style } = this._area;
 
         // Using transform will make the area's borders look blurry
         style.left = `${x}px`;
@@ -760,8 +760,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _onTapStop(evt: MouseEvent | TouchEvent | null, silent: boolean): void {
-        const {document: doc, features} = this._options;
-        const {_singleClick} = this;
+        const { document: doc, features } = this._options;
+        const { _singleClick } = this;
 
         // Remove event handlers
         off(this._targetElement, 'scroll', this._onStartAreaScroll);
@@ -769,7 +769,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         // For regular documents, we unbind from the document
         const eventTarget = doc instanceof ShadowRoot ? doc : getDocument(doc);
         const mainDocument = getDocument(doc);
-        
+
         off(eventTarget, ['mousemove', 'touchmove'], this._delayedTapMove);
         off(mainDocument, ['mousemove', 'touchmove'], this._delayedTapMove);
         off(eventTarget, ['touchmove', 'mousemove'], this._onTapMove);
@@ -777,7 +777,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         off(eventTarget, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
         off(mainDocument, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
         off(eventTarget, 'scroll', this._onScroll);
-        
+
         // For shadow roots, also unbind from the shadow host
         if (doc instanceof ShadowRoot) {
             off(doc.host, ['mousemove', 'touchmove'], this._delayedTapMove);
@@ -799,10 +799,10 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         this._scrollSpeed.y = 0;
 
         // Unbind mouse scrolling listener
-        off(this._targetElement, 'wheel', this._wheelScroll, {passive: true});
+        off(this._targetElement, 'wheel', this._wheelScroll, { passive: true });
 
         // Unbind keyboard scrolling listener
-        off(this._options.document, 'keydown', this._keyboardScroll, {passive: true,});
+        off(this._options.document, 'keydown', this._keyboardScroll, { passive: true, });
 
         // Remove selection-area from dom
         this._clippingElement.remove();
@@ -815,9 +815,9 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _updateElementSelection(): void {
-        const {_selectables, _options, _selection, _areaRect} = this;
-        const {stored, selected, touched} = _selection;
-        const {intersect, overlap} = _options.behaviour;
+        const { _selectables, _options, _selection, _areaRect } = this;
+        const { stored, selected, touched } = _selection;
+        const { intersect, overlap } = _options.behaviour;
 
         const invert = overlap === 'invert';
         const newlyTouched: Element[] = [];
@@ -875,7 +875,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
         }
 
         _selection.selected = newlyTouched;
-        _selection.changed = {added, removed};
+        _selection.changed = { added, removed };
 
         // Prevent range selection when selection an area.
         this._latestElement = undefined;
@@ -890,8 +890,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
 
     _keepSelection(): void {
-        const {_options, _selection} = this;
-        const {selected, changed, touched, stored} = _selection;
+        const { _options, _selection } = this;
+        const { selected, changed, touched, stored } = _selection;
         const addedElements = selected.filter(el => !stored.includes(el));
 
         switch (_options.behaviour.overlap) {
@@ -940,9 +940,10 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
      * Same as deselecting, but for all elements currently selected
      * @param includeStored If the store should also get cleared
      * @param quiet If move / stop events should be fired
+     * @param event The event that triggered the clear selection
      */
-    clearSelection(includeStored = true, quiet = false): void {
-        const {selected, stored, changed} = this._selection;
+    clearSelection(includeStored = true, quiet = false, event: MouseEvent | TouchEvent | null = null): void {
+        const { selected, stored, changed } = this._selection;
 
         changed.added = [];
         changed.removed.push(
@@ -952,8 +953,9 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
 
         // Fire event
         if (!quiet) {
-            this._emitEvent('move', null);
-            this._emitEvent('stop', null);
+            this._emitEvent('start', event);
+            this._emitEvent('move', event);
+            this._emitEvent('stop', event);
         }
 
         // Reset state
@@ -1030,8 +1032,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
      * @param query CSS Query, can be an array of queries
      * @param quiet If this should not trigger the move event
      */
-    select(query: SelectAllSelectors, quiet = false): Element[] {
-        const {changed, selected, stored} = this._selection;
+    select(query: SelectAllSelectors, quiet = false, event: MouseEvent | TouchEvent | null = null): Element[] {
+        const { changed, selected, stored } = this._selection;
         const elements = selectAll(query, this._options.document).filter(el =>
             !selected.includes(el) &&
             !stored.includes(el)
@@ -1048,8 +1050,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
 
         // Fire event
         if (!quiet) {
-            this._emitEvent('move', null);
-            this._emitEvent('stop', null);
+            this._emitEvent('move', event);
+            this._emitEvent('stop', event);
         }
 
         return elements;
@@ -1060,8 +1062,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
      * @param query CSS Query, can be an array of queries
      * @param quiet If this should not trigger the move event
      */
-    deselect(query: SelectAllSelectors, quiet = false) {
-        const {selected, stored, changed} = this._selection;
+    deselect(query: SelectAllSelectors, quiet = false, event: MouseEvent | TouchEvent | null = null) {
+        const { selected, stored, changed } = this._selection;
 
         const elements = selectAll(query, this._options.document).filter(el =>
             selected.includes(el) ||
@@ -1080,8 +1082,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
 
         // Fire event
         if (!quiet) {
-            this._emitEvent('move', null);
-            this._emitEvent('stop', null);
+            this._emitEvent('move', event);
+            this._emitEvent('stop', event);
         }
     }
 }
