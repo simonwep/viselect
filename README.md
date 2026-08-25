@@ -30,7 +30,7 @@
     src="https://github.com/simonwep/viselect/actions/workflows/main.yml/badge.svg"></a>
   <a href="https://github.com/simonwep/viselect/actions/workflows/deploy.yml"><img
     alt="Docs"
-    src="https://github.com/simonwep/viselect/actions/workflows/deploy.yml/badge.svg"></a>
+    src="https://github.com/simonwep/viselect/actions/workflows/docs.yml/badge.svg"></a>
   <img alt="gzip size" src="https://img.badgesize.io/https://cdn.jsdelivr.net/npm/@viselect/vanilla/dist/viselect.umd.js?compression=gzip">
   <img alt="brotli size" src="https://img.badgesize.io/https://cdn.jsdelivr.net/npm/@viselect/vanilla/dist/viselect.umd.js?compression=brotli">
   <a href="https://v3.vuejs.org"><img
