@@ -1,37 +1,40 @@
 {
-    "name": "root",
-    "author": "Simon Reinisch <contact@reinisch.io>",
-    "private": true,
-    "license": "MIT",
-    "packageManager": "pnpm@10.27.0",
-    "engines": {
-        "node": "^24"
-    },
-    "scripts": {
-        "dev": "pnpm run --parallel dev",
-        "build": "pnpm run --recursive build",
-        "lint": "eslint \"packages/*/{src,demo}/**/*.{mts,ts,tsx,vue}\" --cache",
-        "lint:fix": "pnpm run lint --fix",
-        "test:ci": "pnpm run lint:fix && pnpm run build && pnpm docs:build",
-        "release:major": "lerna version major",
-        "release:minor": "lerna version minor",
-        "release:patch": "lerna version patch",
-        "docs:dev": "vitepress dev docs --port 3033",
-        "docs:build": "vitepress build docs",
-        "docs:preview": "vitepress preview docs"
-    },
-    "devDependencies": {
-        "@eslint/js": "9.39.2",
-        "@typescript-eslint/eslint-plugin": "8.55.0",
-        "@typescript-eslint/parser": "8.55.0",
-        "@vue/eslint-config-typescript": "14.6.0",
-        "eslint": "9.39.2",
-        "eslint-plugin-prefer-arrow-functions": "3.9.1",
-        "eslint-plugin-react": "7.37.5",
-        "eslint-plugin-vue": "9.33.0",
-        "globals": "17.3.0",
-        "lerna": "9.0.4",
-        "typescript-eslint": "8.55.0",
-        "vitepress": "1.6.4"
-    }
+  "name": "root",
+  "author": "Simon Reinisch <contact@reinisch.io>",
+  "private": true,
+  "license": "MIT",
+  "packageManager": "pnpm@10.27.0",
+  "engines": {
+    "node": "^24"
+  },
+  "scripts": {
+    "dev": "pnpm run --parallel dev",
+    "build": "pnpm run --recursive build",
+    "lint": "eslint \"**/*.{mjs,mts,ts,tsx,vue}\" --cache",
+    "lint:fix": "pnpm run lint --fix",
+    "test:ci": "pnpm run lint:fix && pnpm run build && pnpm docs:build",
+    "release:major": "lerna version major",
+    "release:minor": "lerna version minor",
+    "release:patch": "lerna version patch",
+    "docs:dev": "vitepress dev docs --port 3033",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@typescript-eslint/eslint-plugin": "8.67.0",
+    "@typescript-eslint/parser": "8.67.0",
+    "@vue/eslint-config-prettier": "10.2.0",
+    "@vue/eslint-config-typescript": "14.9.0",
+    "eslint": "9.39.5",
+    "eslint-plugin-prefer-arrow-functions": "3.10.2",
+    "eslint-plugin-prettier": "5.5.6",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-vue": "10.10.0",
+    "globals": "17.11.0",
+    "lerna": "10.0.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.67.0",
+    "vitepress": "1.6.4"
+  }
 }

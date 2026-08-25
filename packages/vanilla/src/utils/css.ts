@@ -1,5 +1,5 @@
 const unitify = (val: string | number, unit = 'px'): string => {
-    return typeof val === 'number' ? val + unit : val;
+  return typeof val === 'number' ? val + unit : val;
 };
 
 /**
@@ -11,17 +11,20 @@ const unitify = (val: string | number, unit = 'px'): string => {
  * @param val The value for a single attribute.
  * @returns {*}
  */
-export const css = ({style}: HTMLElement, attr: Partial<Record<keyof CSSStyleDeclaration, string | number>> | string, val?: string | number): void => {
-    if (typeof attr === 'object') {
-        for (const [key, value] of Object.entries(attr)) {
-            if (value !== undefined) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                style[key as any] = unitify(value);
-            }
-        }
-    } else if (val !== undefined) {
+export const css = (
+  { style }: HTMLElement,
+  attr: Partial<Record<keyof CSSStyleDeclaration, string | number>> | string,
+  val?: string | number
+): void => {
+  if (typeof attr === 'object') {
+    for (const [key, value] of Object.entries(attr)) {
+      if (value !== undefined) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        style[attr as any] = unitify(val);
+        style[key as any] = unitify(value);
+      }
     }
+  } else if (val !== undefined) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    style[attr as any] = unitify(val);
+  }
 };
-

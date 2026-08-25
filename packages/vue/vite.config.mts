@@ -1,47 +1,47 @@
 import vue from '@vitejs/plugin-vue';
-import {resolve} from 'path';
-import {defineConfig} from 'vite';
+import { resolve } from 'path';
+import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import banner from 'vite-plugin-banner';
-import {version} from './package.json';
+import { version } from './package.json' with { type: 'json' };
 
 const header = `/*! @viselect/vue v${version} MIT | https://github.com/simonwep/viselect/tree/master/packages/vue */`;
 
-export default defineConfig(env => ({
-    root: env.mode === 'production' ? '.' : './demo',
+export default defineConfig((env) => ({
+  root: env.mode === 'production' ? '.' : './demo',
 
-    plugins: [vue(), banner(header), dts()],
+  plugins: [vue(), banner(header), dts()],
 
-    build: {
-        sourcemap: true,
-        minify: 'esbuild',
-        lib: {
-            entry: 'src/index.ts',
-            name: 'SelectionArea',
-            fileName: 'viselect'
-        },
-        rollupOptions: {
-            external: ['vue', '@viselect/vanilla'],
-            output: {
-                globals: {
-                    vue: 'Vue',
-                    '@viselect/vanilla': 'SelectionArea'
-                },
-            },
-        },
+  build: {
+    sourcemap: true,
+    minify: 'esbuild',
+    lib: {
+      entry: 'src/index.ts',
+      name: 'SelectionArea',
+      fileName: 'viselect'
     },
-
-    resolve: {
-        alias: {
-            '@vanilla': resolve(__dirname, '../vanilla/src')
+    rollupOptions: {
+      external: ['vue', '@viselect/vanilla'],
+      output: {
+        globals: {
+          vue: 'Vue',
+          '@viselect/vanilla': 'SelectionArea'
         }
-    },
-
-    server: {
-        port: 3008
-    },
-
-    define: {
-        'VERSION': JSON.stringify(version)
+      }
     }
+  },
+
+  resolve: {
+    alias: {
+      '@vanilla': resolve(process.cwd(), '../vanilla/src')
+    }
+  },
+
+  server: {
+    port: 3008
+  },
+
+  define: {
+    VERSION: JSON.stringify(version)
+  }
 }));

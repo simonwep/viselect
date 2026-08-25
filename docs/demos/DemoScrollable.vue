@@ -1,12 +1,9 @@
 <template>
-  <div
-    ref="root"
-    :class="[$style.container, $style.purple]"
-  />
+  <div ref="root" :class="[$style.container, $style.purple]" />
 </template>
 
 <script setup lang="ts">
-import {useCssModule, onMounted, useTemplateRef} from 'vue';
+import { useCssModule, onMounted, useTemplateRef } from 'vue';
 import SelectionArea from '@viselect/vanilla';
 
 const styles = useCssModule();
@@ -17,7 +14,7 @@ onMounted(() => {
   const boxes = 300;
 
   for (let i = 0; i < boxes; i++) {
-    const div = document.createElement('div');;
+    const div = document.createElement('div');
     container.appendChild(div);
   }
 
@@ -25,15 +22,24 @@ onMounted(() => {
     selectables: [`.${styles.container} > div`],
     boundaries: [`.${styles.container}`],
     selectionAreaClass: styles.selectionArea
-  }).on('start', ({store, event}) => {
-    if (!event.ctrlKey && !event.metaKey) {
-      store.stored.forEach(el => el.classList.remove(styles.selected));
-      selection.clearSelection();
-    }
-  }).on('move', ({store: {changed: {added, removed}}}) => {
-    added.forEach(el => el.classList.add(styles.selected));
-    removed.forEach(el => el.classList.remove(styles.selected));
-  });
+  })
+    .on('start', ({ store, event }) => {
+      if (!event.ctrlKey && !event.metaKey) {
+        store.stored.forEach((el) => el.classList.remove(styles.selected));
+        selection.clearSelection();
+      }
+    })
+    .on(
+      'move',
+      ({
+        store: {
+          changed: { added, removed }
+        }
+      }) => {
+        added.forEach((el) => el.classList.add(styles.selected));
+        removed.forEach((el) => el.classList.remove(styles.selected));
+      }
+    );
 });
 </script>
 

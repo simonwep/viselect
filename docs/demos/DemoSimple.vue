@@ -1,12 +1,9 @@
 <template>
-  <div
-    ref="root"
-    :class="[$style.container, $style.purple]"
-  />
+  <div ref="root" :class="[$style.container, $style.purple]" />
 </template>
 
 <script setup lang="ts">
-import {useCssModule, onMounted, useTemplateRef} from 'vue';
+import { useCssModule, onMounted, useTemplateRef } from 'vue';
 import SelectionArea from '@viselect/vanilla';
 
 const styles = useCssModule();
@@ -14,11 +11,11 @@ const root = useTemplateRef('root');
 
 onMounted(() => {
   const container = root.value;
-  const {width} = container.getBoundingClientRect();
+  const { width } = container.getBoundingClientRect();
   const boxes = 33;
   const rows = 3;
   const totalBoxMargin = 4 * 2 * (boxes / rows);
-  const boxWidth = (width - 20 - 4 - totalBoxMargin) / ((boxes / rows));
+  const boxWidth = (width - 20 - 4 - totalBoxMargin) / (boxes / rows);
 
   for (let i = 0; i < boxes; i++) {
     const div = document.createElement('div');
@@ -30,15 +27,24 @@ onMounted(() => {
     selectables: [`.${styles.container} > div`],
     boundaries: [`.${styles.container}`],
     selectionAreaClass: styles.selectionArea
-  }).on('start', ({store, event}) => {
-    if (!event.ctrlKey && !event.metaKey) {
-      store.stored.forEach(el => el.classList.remove(styles.selected));
-      selection.clearSelection();
-    }
-  }).on('move', ({store: {changed: {added, removed}}}) => {
-    added.forEach(el => el.classList.add(styles.selected));
-    removed.forEach(el => el.classList.remove(styles.selected));
-  });
+  })
+    .on('start', ({ store, event }) => {
+      if (!event.ctrlKey && !event.metaKey) {
+        store.stored.forEach((el) => el.classList.remove(styles.selected));
+        selection.clearSelection();
+      }
+    })
+    .on(
+      'move',
+      ({
+        store: {
+          changed: { added, removed }
+        }
+      }) => {
+        added.forEach((el) => el.classList.add(styles.selected));
+        removed.forEach((el) => el.classList.remove(styles.selected));
+      }
+    );
 });
 </script>
 

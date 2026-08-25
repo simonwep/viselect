@@ -1,32 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {arrayify} from './arrayify';
+import { arrayify } from './arrayify';
 
 type Method = 'addEventListener' | 'removeEventListener';
 type AnyFunction = (...arg: any) => any;
 
-const eventListener = (method: Method) => (
+const eventListener =
+  (method: Method) =>
+  (
     items: (EventTarget | undefined) | (EventTarget | undefined)[],
     events: string | string[],
     fn: AnyFunction,
     options = {}
-) => {
-
+  ) => {
     // Normalize array
     if (items instanceof HTMLCollection || items instanceof NodeList) {
-        items = Array.from(items);
+      items = Array.from(items);
     }
 
-    events = arrayify(events)
+    events = arrayify(events);
     items = arrayify(items);
 
     for (const el of items) {
-        if (el) {
-            for (const ev of events) {
-                el[method](ev, fn as EventListener, {capture: false, ...options});
-            }
+      if (el) {
+        for (const ev of events) {
+          el[method](ev, fn as EventListener, { capture: false, ...options });
         }
+      }
     }
-};
+  };
 
 /**
  * Add event(s) to element(s).
@@ -52,11 +53,13 @@ export const off = eventListener('removeEventListener');
  * Simplifies a touch / mouse-event
  * @param evt
  */
-export const simplifyEvent = (evt: any): {
-    target: HTMLElement;
-    x: number;
-    y: number;
+export const simplifyEvent = (
+  evt: any
+): {
+  target: HTMLElement;
+  x: number;
+  y: number;
 } => {
-    const {clientX, clientY, target} = evt.touches?.[0] ?? evt;
-    return {x: clientX, y: clientY, target};
+  const { clientX, clientY, target } = evt.touches?.[0] ?? evt;
+  return { x: clientX, y: clientY, target };
 };

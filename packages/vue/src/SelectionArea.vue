@@ -5,8 +5,9 @@
 </template>
 
 <script lang="ts" setup>
-import SelectionArea, {SelectionEvent, PartialSelectionOptions} from '@viselect/vanilla';
-import {onBeforeUnmount, shallowRef, useTemplateRef, watchEffect} from 'vue';
+import type { PartialSelectionOptions } from '@viselect/vanilla';
+import SelectionArea, { type SelectionEvent } from '@viselect/vanilla';
+import { onBeforeUnmount, shallowRef, useTemplateRef, watchEffect } from 'vue';
 
 const emit = defineEmits<{
   (e: 'before-start', v: SelectionEvent): void;
@@ -32,11 +33,11 @@ watchEffect(() => {
       ...props.options
     });
 
-    instance.value.on('beforestart', evt => emit('before-start', evt));
-    instance.value.on('beforedrag', evt => emit('before-drag', evt));
-    instance.value.on('start', evt => emit('start', evt));
-    instance.value.on('move', evt => emit('move', evt));
-    instance.value.on('stop', evt => emit('stop', evt));
+    instance.value.on('beforestart', (evt) => emit('before-start', evt));
+    instance.value.on('beforedrag', (evt) => emit('before-drag', evt));
+    instance.value.on('start', (evt) => emit('start', evt));
+    instance.value.on('move', (evt) => emit('move', evt));
+    instance.value.on('stop', (evt) => emit('stop', evt));
 
     emit('init', instance.value);
   }

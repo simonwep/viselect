@@ -1,58 +1,58 @@
 {
-    "name": "@viselect/preact",
-    "version": "3.9.0",
-    "description": "Preact wrapper around the viselect vanilla library",
-    "author": "Simon Reinisch <contact@reinisch.io>",
-    "bugs": "https://github.com/simonwep/viselect/issues",
-    "homepage": "https://github.com/simonwep/viselect#readme",
-    "repository": "git+https://github.com/simonwep/viselect.git",
-    "license": "MIT",
-    "main": "./dist/viselect.umd.js",
-    "module": "./dist/viselect.mjs",
-    "types": "./dist/src/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./dist/src/index.d.ts",
-            "import": "./dist/viselect.mjs",
-            "require": "./dist/viselect.umd.js"
-        }
-    },
-    "scripts": {
-        "build": "tsc && vite build",
-        "dev": "vite"
-    },
-    "files": [
-        "dist"
-    ],
-    "keywords": [
-        "preact",
-        "viselect",
-        "typescript",
-        "selecting",
-        "selection",
-        "user-selection",
-        "user-interface",
-        "ui-library",
-        "ui"
-    ],
-    "peerDependencies": {
-        "preact": ">=10.5.15"
-    },
-    "dependencies": {
-        "@viselect/vanilla": "workspace:*"
-    },
-    "devDependencies": {
-        "@preact/preset-vite": "2.10.3",
-        "@types/react": "19.2.14",
-        "@types/react-dom": "19.2.3",
-        "@types/node": "25.2.3",
-        "typescript": "5.9.3",
-        "vite": "7.3.1",
-        "vite-plugin-banner": "0.8.1",
-        "vite-plugin-dts": "4.5.4",
-        "preact": "10.28.3"
-    },
-    "publishConfig": {
-        "access": "public"
+  "name": "@viselect/preact",
+  "version": "3.9.0",
+  "description": "Preact wrapper around the viselect vanilla library",
+  "author": "Simon Reinisch <contact@reinisch.io>",
+  "bugs": "https://github.com/simonwep/viselect/issues",
+  "homepage": "https://github.com/simonwep/viselect#readme",
+  "repository": "git+https://github.com/simonwep/viselect.git",
+  "license": "MIT",
+  "main": "./dist/viselect.umd.js",
+  "module": "./dist/viselect.mjs",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/viselect.mjs",
+      "require": "./dist/viselect.umd.js"
     }
+  },
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "preact",
+    "viselect",
+    "typescript",
+    "selecting",
+    "selection",
+    "user-selection",
+    "user-interface",
+    "ui-library",
+    "ui"
+  ],
+  "peerDependencies": {
+    "preact": ">=10.5.15"
+  },
+  "dependencies": {
+    "@viselect/vanilla": "workspace:*"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "2.10.6",
+    "@types/node": "26.2.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "preact": "10.29.8",
+    "typescript": "6.0.3",
+    "vite": "8.2.2",
+    "vite-plugin-banner": "0.8.1",
+    "vite-plugin-dts": "5.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

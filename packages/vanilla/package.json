@@ -1,47 +1,47 @@
 {
-    "name": "@viselect/vanilla",
-    "version": "3.9.0",
-    "description": "Simple, lightweight and modern library library for making visual DOM Selections.",
-    "author": "Simon Reinisch <contact@reinisch.io>",
-    "bugs": "https://github.com/simonwep/viselect/issues",
-    "homepage": "https://github.com/simonwep/viselect#readme",
-    "repository": "git+https://github.com/simonwep/viselect.git",
-    "license": "MIT",
-    "main": "./dist/viselect.umd.js",
-    "module": "./dist/viselect.mjs",
-    "types": "./dist/src/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./dist/src/index.d.ts",
-            "import": "./dist/viselect.mjs",
-            "require": "./dist/viselect.umd.js"
-        }
-    },
-    "scripts": {
-        "build": "tsc && vite build",
-        "dev": "vite"
-    },
-    "files": [
-        "dist"
-    ],
-    "keywords": [
-        "viselect",
-        "typescript",
-        "selecting",
-        "selection",
-        "user-selection",
-        "user-interface",
-        "ui-library",
-        "ui"
-    ],
-    "devDependencies": {
-        "@types/node": "25.2.3",
-        "vite-plugin-banner": "0.8.1",
-        "vite-plugin-dts": "4.5.4",
-        "typescript": "5.9.3",
-        "vite": "7.3.1"
-    },
-    "publishConfig": {
-        "access": "public"
+  "name": "@viselect/vanilla",
+  "version": "3.9.0",
+  "description": "Simple, lightweight and modern library library for making visual DOM Selections.",
+  "author": "Simon Reinisch <contact@reinisch.io>",
+  "bugs": "https://github.com/simonwep/viselect/issues",
+  "homepage": "https://github.com/simonwep/viselect#readme",
+  "repository": "git+https://github.com/simonwep/viselect.git",
+  "license": "MIT",
+  "main": "./dist/viselect.umd.js",
+  "module": "./dist/viselect.mjs",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/viselect.mjs",
+      "require": "./dist/viselect.umd.js"
     }
+  },
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "viselect",
+    "typescript",
+    "selecting",
+    "selection",
+    "user-selection",
+    "user-interface",
+    "ui-library",
+    "ui"
+  ],
+  "devDependencies": {
+    "@types/node": "26.2.0",
+    "typescript": "6.0.3",
+    "vite": "8.2.2",
+    "vite-plugin-banner": "0.8.1",
+    "vite-plugin-dts": "5.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

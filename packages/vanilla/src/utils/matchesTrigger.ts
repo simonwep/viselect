@@ -1,18 +1,16 @@
-
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button#value
-export type MouseButton = 0  // Main
-    | 1  // Auxiliary
-    | 2  // Secondary
-    | 3  // Fourth
-    | 4; // Fifth
+export type MouseButton =
+  | 0 // Main
+  | 1 // Auxiliary
+  | 2 // Secondary
+  | 3 // Fourth
+  | 4; // Fifth
 
-export type Modifier = 'ctrl'
-    | 'alt'
-    | 'shift';
+export type Modifier = 'ctrl' | 'alt' | 'shift';
 
-export type MouseButtonWithModifiers =  {
-    button: MouseButton,
-    modifiers: Modifier[]
+export type MouseButtonWithModifiers = {
+  button: MouseButton;
+  modifiers: Modifier[];
 };
 
 export type Trigger = MouseButton | MouseButtonWithModifiers;
@@ -26,30 +24,29 @@ export type Trigger = MouseButton | MouseButtonWithModifiers;
  * @returns Whether the MouseEvent should execute until completion
  */
 export const matchesTrigger = (event: MouseEvent, triggers: Trigger[]): boolean =>
-    triggers.some((trigger) => {
+  triggers.some((trigger) => {
+    // The trigger requires only a specific button to be pressed
+    if (typeof trigger === 'number') {
+      return event.button === trigger;
+    }
 
-        // The trigger requires only a specific button to be pressed
-        if (typeof trigger === 'number') {
-            return event.button === trigger;
-        }
-
-        // The trigger requires a specific button to be pressed AND some modifiers
-        if (typeof trigger === 'object') {
-            if (trigger.button !== event.button) {
-                return false;
-            }
-
-            return trigger.modifiers.every((modifier) => {
-                switch (modifier) {
-                    case 'alt':
-                        return event.altKey;
-                    case 'ctrl':
-                        return event.ctrlKey || event.metaKey;
-                    case 'shift':
-                        return event.shiftKey;
-                }
-            });
-        }
-
+    // The trigger requires a specific button to be pressed AND some modifiers
+    if (typeof trigger === 'object') {
+      if (trigger.button !== event.button) {
         return false;
-    });
+      }
+
+      return trigger.modifiers.every((modifier) => {
+        switch (modifier) {
+          case 'alt':
+            return event.altKey;
+          case 'ctrl':
+            return event.ctrlKey || event.metaKey;
+          case 'shift':
+            return event.shiftKey;
+        }
+      });
+    }
+
+    return false;
+  });

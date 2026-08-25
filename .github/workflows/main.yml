@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -20,7 +20,7 @@ jobs:
           version: 10.27.0
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           registry-url: https://registry.npmjs.org
           node-version: 24
@@ -55,10 +55,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           registry-url: https://registry.npmjs.org
           node-version: 24

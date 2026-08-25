@@ -1,4 +1,4 @@
-import {arrayify} from './arrayify';
+import { arrayify } from './arrayify';
 
 export type SelectAllSelectors = (string | Element)[] | string | Element;
 
@@ -9,13 +9,9 @@ export type SelectAllSelectors = (string | Element)[] | string | Element;
  * @returns {Array} Array of DOM-Nodes.
  */
 export const selectAll = (selector: SelectAllSelectors, doc: Document = document): Element[] =>
-    arrayify(selector)
-        .map(item =>
-            typeof item === 'string'
-                ? Array.from(doc.querySelectorAll(item))
-                : item instanceof Element
-                    ? item
-                    : null
-        )
-        .flat()
-        .filter(Boolean) as Element[];
+  arrayify(selector)
+    .map((item) =>
+      typeof item === 'string' ? Array.from(doc.querySelectorAll(item)) : item instanceof Element ? item : null
+    )
+    .flat()
+    .filter(Boolean) as Element[];
