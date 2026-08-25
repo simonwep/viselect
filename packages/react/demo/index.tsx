@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { SelectionEvent } from '../src';
 import { SelectionArea } from '../src';
@@ -49,10 +49,10 @@ const SelectableArea = ({ boxes, offset, className }: { boxes: number; offset: n
 const root = createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <h1>React</h1>
     <SelectableArea boxes={42} offset={0} className="green" />
     <SelectableArea boxes={42} offset={42} className="blue" />
     <SelectableArea boxes={252} offset={82} className="red" />
-  </React.StrictMode>
+  </StrictMode>
 );

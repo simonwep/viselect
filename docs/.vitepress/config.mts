@@ -132,7 +132,7 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        '@viselect/vanilla': require.resolve('../../packages/vanilla/dist/viselect.mjs')
+        '@viselect/vanilla': require.resolve('../../packages/vanilla/dist/viselect.js')
       }
     }
   }

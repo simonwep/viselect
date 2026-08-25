@@ -1,27 +1,7 @@
 {
+  "files": [],
   "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ],
-  "include": [
-    "src",
-    "demo"
-  ],
-  "compilerOptions": {
-    /* Language and environment */
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    /* Linting and config */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "verbatimModuleSyntax": true
-  }
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { version } from './package.json' with { type: 'json' };
 import banner from 'vite-plugin-banner';
-import dts from 'vite-plugin-dts';
+import dts from 'unplugin-dts/vite';
 
 const header = `/*! @viselect/vanilla v${version} MIT | https://github.com/simonwep/viselect/tree/master/packages/vanilla */`;
 

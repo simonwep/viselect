@@ -1,9 +1,9 @@
 import VanillaSelectionArea from '@viselect/vanilla';
 import type { SelectionEvents, PartialSelectionOptions } from '@viselect/vanilla';
-import type React from 'react';
+import type { HTMLAttributes, FunctionComponent } from 'react';
 import { useEffect, createContext, useContext, useRef, useState, useMemo } from 'react';
 
-export interface SelectionAreaProps extends PartialSelectionOptions, React.HTMLAttributes<HTMLDivElement> {
+export interface SelectionAreaProps extends PartialSelectionOptions, HTMLAttributes<HTMLDivElement> {
   id?: string;
   className?: string;
   onBeforeStart?: SelectionEvents['beforestart'];
@@ -17,7 +17,7 @@ const SelectionContext = createContext<VanillaSelectionArea | undefined>(undefin
 
 export const useSelection = () => useContext(SelectionContext);
 
-export const SelectionArea: React.FunctionComponent<SelectionAreaProps> = (props) => {
+export const SelectionArea: FunctionComponent<SelectionAreaProps> = (props) => {
   const {
     boundaries,
     document: doc,

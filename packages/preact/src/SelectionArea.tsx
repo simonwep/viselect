@@ -1,10 +1,10 @@
 import VanillaSelectionArea from '@viselect/vanilla';
 import type { SelectionEvents, PartialSelectionOptions } from '@viselect/vanilla';
-import type { JSX, FunctionalComponent } from 'preact';
+import type { HTMLAttributes, FunctionalComponent } from 'preact';
 import { createContext } from 'preact';
 import { useEffect, useContext, useState, useMemo, useRef } from 'preact/hooks';
 
-export interface SelectionAreaProps extends PartialSelectionOptions, JSX.HTMLAttributes<HTMLDivElement> {
+export interface SelectionAreaProps extends PartialSelectionOptions, HTMLAttributes<HTMLDivElement> {
   id?: string;
   className?: string;
   onBeforeStart?: SelectionEvents['beforestart'];

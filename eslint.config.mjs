@@ -69,7 +69,7 @@ export default [
       parserOptions: {
         extraFileExtensions: ['.vue'],
         parser: tsParser,
-        project: ['./packages/vue/tsconfig.json', './docs/tsconfig.json']
+        project: ['./packages/vue/tsconfig.app.json', './docs/tsconfig.app.json']
       },
       globals: {
         ...globals.browser

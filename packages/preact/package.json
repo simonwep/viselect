@@ -7,18 +7,19 @@
   "homepage": "https://github.com/simonwep/viselect#readme",
   "repository": "git+https://github.com/simonwep/viselect.git",
   "license": "MIT",
-  "main": "./dist/viselect.umd.js",
-  "module": "./dist/viselect.mjs",
+  "type": "module",
+  "main": "./dist/viselect.umd.cjs",
+  "module": "./dist/viselect.js",
   "types": "./dist/src/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
-      "import": "./dist/viselect.mjs",
-      "require": "./dist/viselect.umd.js"
+      "import": "./dist/viselect.js",
+      "require": "./dist/viselect.umd.cjs"
     }
   },
   "scripts": {
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc && vite build",
     "dev": "vite"
   },
   "files": [
@@ -50,7 +51,7 @@
     "typescript": "6.0.3",
     "vite": "8.2.2",
     "vite-plugin-banner": "0.8.1",
-    "vite-plugin-dts": "5.0.3"
+    "unplugin-dts": "1.0.3"
   },
   "publishConfig": {
     "access": "public"

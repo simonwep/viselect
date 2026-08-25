@@ -1,16 +1,16 @@
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
+import dts from 'unplugin-dts/vite';
 import banner from 'vite-plugin-banner';
-import { version } from './package.json' with { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
 
-const header = `/*! @viselect/vue v${version} MIT | https://github.com/simonwep/viselect/tree/master/packages/vue */`;
+const header = `/*! @viselect/vue v${pkg.version} MIT | https://github.com/simonwep/viselect/tree/master/packages/vue */`;
 
 export default defineConfig((env) => ({
   root: env.mode === 'production' ? '.' : './demo',
 
-  plugins: [vue(), banner(header), dts()],
+  plugins: [vue(), banner(header), dts({ tsconfigPath: './tsconfig.app.json' })],
 
   build: {
     sourcemap: true,
@@ -20,7 +20,7 @@ export default defineConfig((env) => ({
       name: 'SelectionArea',
       fileName: 'viselect'
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: ['vue', '@viselect/vanilla'],
       output: {
         globals: {
@@ -42,6 +42,6 @@ export default defineConfig((env) => ({
   },
 
   define: {
-    VERSION: JSON.stringify(version)
+    VERSION: JSON.stringify(pkg.version)
   }
 }));

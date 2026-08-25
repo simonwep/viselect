@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@eslint/js':
-        specifier: 10.0.1
-        version: 10.0.1(eslint@9.39.5)
+        specifier: 9.39.5
+        version: 9.39.5
       '@typescript-eslint/eslint-plugin':
         specifier: 8.67.0
         version: 8.67.0(@typescript-eslint/parser@8.67.0(eslint@9.39.5)(typescript@6.0.3))(eslint@9.39.5)(typescript@6.0.3)
@@ -78,15 +78,15 @@ importers:
       typescript:
         specifier: 6.0.3
         version: 6.0.3
+      unplugin-dts:
+        specifier: 1.0.3
+        version: 1.0.3(@microsoft/api-extractor@7.56.3(@types/node@26.2.0))(@vue/language-core@3.3.11)(esbuild@0.27.3)(rolldown@1.2.5)(rollup@4.62.5)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0))
       vite:
         specifier: 8.2.2
         version: 8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0)
       vite-plugin-banner:
         specifier: 0.8.1
         version: 0.8.1
-      vite-plugin-dts:
-        specifier: 5.0.3
-        version: 5.0.3(@microsoft/api-extractor@7.56.3(@types/node@26.2.0))(@vue/language-core@3.3.11)(esbuild@0.27.3)(rolldown@1.2.5)(rollup@4.62.5)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0))
 
   packages/react:
     dependencies:
@@ -115,15 +115,15 @@ importers:
       typescript:
         specifier: 6.0.3
         version: 6.0.3
+      unplugin-dts:
+        specifier: 1.0.3
+        version: 1.0.3(@microsoft/api-extractor@7.56.3(@types/node@26.2.0))(@vue/language-core@3.3.11)(esbuild@0.27.3)(rolldown@1.2.5)(rollup@4.62.5)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0))
       vite:
         specifier: 8.2.2
         version: 8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0)
       vite-plugin-banner:
         specifier: 0.8.1
         version: 0.8.1
-      vite-plugin-dts:
-        specifier: 5.0.3
-        version: 5.0.3(@microsoft/api-extractor@7.56.3(@types/node@26.2.0))(@vue/language-core@3.3.11)(esbuild@0.27.3)(rolldown@1.2.5)(rollup@4.62.5)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0))
 
   packages/vanilla:
     devDependencies:
@@ -133,15 +133,15 @@ importers:
       typescript:
         specifier: 6.0.3
         version: 6.0.3
+      unplugin-dts:
+        specifier: 1.0.3
+        version: 1.0.3(@microsoft/api-extractor@7.56.3(@types/node@26.2.0))(@vue/language-core@3.3.11)(esbuild@0.27.3)(rolldown@1.2.5)(rollup@4.62.5)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0))
       vite:
         specifier: 8.2.2
         version: 8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0)
       vite-plugin-banner:
         specifier: 0.8.1
         version: 0.8.1
-      vite-plugin-dts:
-        specifier: 5.0.3
-        version: 5.0.3(@microsoft/api-extractor@7.56.3(@types/node@26.2.0))(@vue/language-core@3.3.11)(esbuild@0.27.3)(rolldown@1.2.5)(rollup@4.62.5)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0))
 
   packages/vue:
     dependencies:
@@ -155,18 +155,21 @@ importers:
       '@vitejs/plugin-vue':
         specifier: 6.0.8
         version: 6.0.8(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0))(vue@3.5.41(typescript@6.0.3))
+      '@vue/tsconfig':
+        specifier: 0.9.1
+        version: 0.9.1(typescript@6.0.3)(vue@3.5.41(typescript@6.0.3))
       typescript:
         specifier: 6.0.3
         version: 6.0.3
+      unplugin-dts:
+        specifier: 1.0.3
+        version: 1.0.3(@microsoft/api-extractor@7.56.3(@types/node@26.2.0))(@vue/language-core@3.3.11)(esbuild@0.27.3)(rolldown@1.2.5)(rollup@4.62.5)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0))
       vite:
         specifier: 8.2.2
         version: 8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0)
       vite-plugin-banner:
         specifier: 0.8.1
         version: 0.8.1
-      vite-plugin-dts:
-        specifier: 5.0.3
-        version: 5.0.3(@microsoft/api-extractor@7.56.3(@types/node@26.2.0))(@vue/language-core@3.3.11)(esbuild@0.27.3)(rolldown@1.2.5)(rollup@4.62.5)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0))
       vue:
         specifier: 3.5.41
         version: 3.5.41(typescript@6.0.3)
@@ -712,15 +715,6 @@ packages:
   '@eslint/eslintrc@3.3.6':
     resolution: {integrity: sha512-l2Ul9PrHsPCKcEY/ac7VgFj9D80C7S68sOKc618SyHDPK36s1XcFebXY0iTzUVn4Yq+YbwvSnDmCz9yxjX+QrA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@eslint/js@10.0.1':
-    resolution: {integrity: sha512-zeR9k5pd4gxjZ0abRoIaxdc7I3nDktoXZk2qOv9gCNWx3mVwEn32VRhyLaRsDiJjTs0xq/T8mfPtyuXu7GWBcA==}
-    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
-    peerDependencies:
-      eslint: ^10.0.0
-    peerDependenciesMeta:
-      eslint:
-        optional: true
 
   '@eslint/js@9.39.5':
     resolution: {integrity: sha512-QywQuszQh77pIXCsq998c8hbhSTI/azTty1Z6N53dmAudKHhy573j3yvRLsX2BSp8YpLtoCEG8E9DJe+8zUh4A==}
@@ -1759,6 +1753,17 @@ packages:
 
   '@vue/shared@3.5.41':
     resolution: {integrity: sha512-IOnwSCma8j+9xJT6b8H0dEYidC80NsYmNMlZxRsukYcSoGaDBohog5hDxzeUXdFeGWFA++vWvxqOmrr96VlqMA==}
+
+  '@vue/tsconfig@0.9.1':
+    resolution: {integrity: sha512-buvjm+9NzLCJL29KY1j1991YYJ5e6275OiK+G4jtmfIb+z4POywbdm0wXusT9adVWqe0xqg70TbI7+mRx4uU9w==}
+    peerDependencies:
+      typescript: '>= 5.8'
+      vue: ^3.4.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      vue:
+        optional: true
 
   '@vueuse/core@12.8.2':
     resolution: {integrity: sha512-HbvCmZdzAu3VGi/pWYm5Ut+Kd9mn1ZHnn4L5G8kOQTPs/IwIAmJoBrmYk2ckLArgMXZj0AW3n5CAejLUO+PhdQ==}
@@ -4301,20 +4306,6 @@ packages:
   vite-plugin-banner@0.8.1:
     resolution: {integrity: sha512-0+gGguHk3MH0HvzMSOCJC6fGgH4+jtY9KlKVZh+hwwE+PBkGVzY8xe657JL74vEgbeUJD37XjVqTrmve8XvZBQ==}
 
-  vite-plugin-dts@5.0.3:
-    resolution: {integrity: sha512-gIth6NdCEHWPiiRMCK3N6C8WjvdsrtEQrmsiG8h6Ov+lFP+b07Y+wcs9H0H7n146l0PDTYK4cQN1vgeG1pMdRQ==}
-    peerDependencies:
-      '@microsoft/api-extractor': '>=7'
-      rollup: '>=3'
-      vite: '>=3'
-    peerDependenciesMeta:
-      '@microsoft/api-extractor':
-        optional: true
-      rollup:
-        optional: true
-      vite:
-        optional: true
-
   vite-prerender-plugin@0.5.13:
     resolution: {integrity: sha512-IKSpYkzDBsKAxa05naRbj7GvNVMSdww/Z/E89oO3xndz+gWnOBOKOAbEXv7qDhktY/j3vHgJmoV1pPzqU2tx9g==}
     peerDependencies:
@@ -5021,10 +5012,6 @@ snapshots:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
-
-  '@eslint/js@10.0.1(eslint@9.39.5)':
-    optionalDependencies:
-      eslint: 9.39.5
 
   '@eslint/js@9.39.5': {}
 
@@ -6119,6 +6106,11 @@ snapshots:
       '@vue/shared': 3.5.41
 
   '@vue/shared@3.5.41': {}
+
+  '@vue/tsconfig@0.9.1(typescript@6.0.3)(vue@3.5.41(typescript@6.0.3))':
+    optionalDependencies:
+      typescript: 6.0.3
+      vue: 3.5.41(typescript@6.0.3)
 
   '@vueuse/core@12.8.2(typescript@6.0.3)':
     dependencies:
@@ -9173,22 +9165,6 @@ snapshots:
       vfile-message: 4.0.3
 
   vite-plugin-banner@0.8.1: {}
-
-  vite-plugin-dts@5.0.3(@microsoft/api-extractor@7.56.3(@types/node@26.2.0))(@vue/language-core@3.3.11)(esbuild@0.27.3)(rolldown@1.2.5)(rollup@4.62.5)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0)):
-    dependencies:
-      unplugin-dts: 1.0.3(@microsoft/api-extractor@7.56.3(@types/node@26.2.0))(@vue/language-core@3.3.11)(esbuild@0.27.3)(rolldown@1.2.5)(rollup@4.62.5)(typescript@6.0.3)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0))
-    optionalDependencies:
-      '@microsoft/api-extractor': 7.56.3(@types/node@26.2.0)
-      rollup: 4.62.5
-      vite: 8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0)
-    transitivePeerDependencies:
-      - '@rspack/core'
-      - '@vue/language-core'
-      - esbuild
-      - rolldown
-      - supports-color
-      - typescript
-      - webpack
 
   vite-prerender-plugin@0.5.13(vite@8.2.2(@types/node@26.2.0)(esbuild@0.27.3)(yaml@2.9.0)):
     dependencies:
