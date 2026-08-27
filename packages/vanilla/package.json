@@ -1,6 +1,6 @@
 {
   "name": "@viselect/vanilla",
-  "version": "3.9.0",
+  "version": "3.10.0",
   "description": "Simple, lightweight and modern library library for making visual DOM Selections.",
   "author": "Simon Reinisch <contact@reinisch.io>",
   "bugs": "https://github.com/simonwep/viselect/issues",
@@ -38,9 +38,9 @@
   "devDependencies": {
     "@types/node": "26.2.0",
     "typescript": "6.0.3",
+    "unplugin-dts": "1.0.3",
     "vite": "8.2.2",
-    "vite-plugin-banner": "0.8.1",
-    "unplugin-dts": "1.0.3"
+    "vite-plugin-banner": "0.8.1"
   },
   "publishConfig": {
     "access": "public"

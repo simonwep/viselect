@@ -1,6 +1,6 @@
 {
   "name": "@viselect/vue",
-  "version": "3.9.0",
+  "version": "3.10.0",
   "description": "Simple, lightweight and modern library library for making visual DOM Selections.",
   "author": "Simon Reinisch <contact@reinisch.io>",
   "bugs": "https://github.com/simonwep/viselect/issues",
@@ -46,12 +46,12 @@
   },
   "devDependencies": {
     "@types/node": "26.2.0",
-    "@vue/tsconfig": "0.9.1",
     "@vitejs/plugin-vue": "6.0.8",
+    "@vue/tsconfig": "0.9.1",
     "typescript": "6.0.3",
+    "unplugin-dts": "1.0.3",
     "vite": "8.2.2",
     "vite-plugin-banner": "0.8.1",
-    "unplugin-dts": "1.0.3",
     "vue": "3.5.41",
     "vue-tsc": "3.3.11"
   },
