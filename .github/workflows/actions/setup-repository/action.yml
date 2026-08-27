@@ -1,0 +1,27 @@
+name: 'Setup Repository'
+description: 'Set up the repository with pnpm and Node.js'
+inputs:
+  pnpm-version:
+    description: 'Version of pnpm to use'
+    default: '10.27.0'
+  node-version:
+    description: 'Version of Node.js to use'
+    default: '24.12.0'
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up pnpm
+      uses: pnpm/action-setup@v6
+      with:
+        version: ${{ inputs.pnpm-version }}
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v7
+      with:
+        registry-url: https://registry.npmjs.org
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile

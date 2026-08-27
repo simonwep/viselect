@@ -1,0 +1,38 @@
+name: Release packages
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: Build, test, and publish packages
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+          
+      - name: Setup repository
+        uses: ./.github/workflows/actions/setup-repository
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Publish packages
+        run: npx lerna publish from-package --yes
+
+      - name: Extract changes
+        id: changelog
+        uses: requarks/changelog-action@v1
+        with:
+          token: ${{ github.token }}
+          tag: ${{ github.ref_name }}
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.changelog.outputs.changes }}

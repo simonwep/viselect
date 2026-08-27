@@ -1,0 +1,38 @@
+name: Test packages
+
+on:
+  pull_request:
+  push:
+    tags-ignore:
+      - '**'
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+          
+      - name: Setup repository
+        uses: ./.github/workflows/actions/setup-repository
+
+      - name: Setup ESLint cache
+        uses: actions/cache@v6
+        with:
+          path: ./.eslintcache
+          key: ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml', '**/eslint.config.mjs') }}
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Build docs
+        run: pnpm docs:build

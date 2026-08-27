@@ -1,4 +1,4 @@
-name: Deploy Docs
+name: Build and deploy docs
 
 on:
   push:
@@ -16,30 +16,17 @@ concurrency:
 
 jobs:
   build:
-    name: Build docs
+    name: Build and deploy docs
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          version: 10.27.0
-
-      - name: Setup Node
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: pnpm
+          
+      - name: Setup repository
+        uses: ./.github/workflows/actions/setup-repository
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Build libraries
         run: pnpm build
@@ -47,19 +34,11 @@ jobs:
       - name: Build docs
         run: pnpm docs:build
 
-      - name: Upload artifact
+      - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
+          name: github-pages
           path: docs/.vitepress/dist
 
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-24.04
-    needs: build
-    if: github.ref == 'refs/heads/master'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v5
