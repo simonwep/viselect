@@ -2,9 +2,8 @@ import preact from '@preact/preset-vite';
 import { defineConfig } from 'vite';
 import banner from 'vite-plugin-banner';
 import dts from 'unplugin-dts/vite';
-import pkg from './package.json' with { type: 'json' };
 
-const header = `/*! @viselect/preact v${pkg.version} MIT | https://github.com/simonwep/viselect/tree/master/packages/preact */`;
+const header = `/*! @viselect/preact v${process.env.npm_package_version} MIT | https://github.com/simonwep/viselect/tree/master/packages/preact */`;
 
 export default defineConfig((env) => ({
   root: env.mode === 'production' ? '.' : './demo',
@@ -23,7 +22,8 @@ export default defineConfig((env) => ({
       external: ['preact', 'preact/hooks', '@viselect/vanilla'],
       output: {
         globals: {
-          preact: 'Preact',
+          preact: 'preact',
+          'preact/hooks': 'preactHooks',
           '@viselect/vanilla': 'SelectionArea'
         }
       }
@@ -35,6 +35,6 @@ export default defineConfig((env) => ({
   },
 
   define: {
-    VERSION: JSON.stringify(pkg.version)
+    VERSION: JSON.stringify(process.env.npm_package_version)
   }
 }));

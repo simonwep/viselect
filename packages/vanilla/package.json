@@ -19,7 +19,7 @@
     }
   },
   "scripts": {
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc && vite build",
     "dev": "vite"
   },
   "files": [

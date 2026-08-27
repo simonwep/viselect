@@ -26,6 +26,8 @@ export const SelectionArea: FunctionComponent<SelectionAreaProps> = (props) => {
     container,
     behaviour,
     features,
+    selectionAreaClass,
+    selectionContainerClass,
     onBeforeStart,
     onBeforeDrag,
     onStart,
@@ -58,7 +60,9 @@ export const SelectionArea: FunctionComponent<SelectionAreaProps> = (props) => {
       startAreas,
       container,
       behaviour,
-      features
+      features,
+      selectionAreaClass,
+      selectionContainerClass
     });
 
     selection.on('beforestart', (evt) => callbacksRef.current.onBeforeStart?.(evt));
@@ -73,7 +77,17 @@ export const SelectionArea: FunctionComponent<SelectionAreaProps> = (props) => {
       selection.destroy();
       setInstance(undefined);
     };
-  }, [boundaries, doc, selectables, startAreas, container, behaviourKey, featuresKey]);
+  }, [
+    boundaries,
+    doc,
+    selectables,
+    startAreas,
+    container,
+    behaviourKey,
+    featuresKey,
+    selectionAreaClass,
+    selectionContainerClass
+  ]);
 
   return (
     <SelectionContext.Provider value={instance}>

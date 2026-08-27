@@ -3,9 +3,8 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import dts from 'unplugin-dts/vite';
 import banner from 'vite-plugin-banner';
-import pkg from './package.json' with { type: 'json' };
 
-const header = `/*! @viselect/vue v${pkg.version} MIT | https://github.com/simonwep/viselect/tree/master/packages/vue */`;
+const header = `/*! @viselect/vue v${process.env.npm_package_version} MIT | https://github.com/simonwep/viselect/tree/master/packages/vue */`;
 
 export default defineConfig((env) => ({
   root: env.mode === 'production' ? '.' : './demo',
@@ -42,6 +41,6 @@ export default defineConfig((env) => ({
   },
 
   define: {
-    VERSION: JSON.stringify(pkg.version)
+    VERSION: JSON.stringify(process.env.npm_package_version)
   }
 }));

@@ -41,6 +41,7 @@ You can use Viselect in your Vue project by importing the `SelectionArea` compon
 ```vue [App.vue]
 <template>
   <SelectionArea class="container"
+                 selectionAreaClass="selection-area"
                  :options="{ selectables: '.selectable' }"
                  :onMove="onMove"
                  :onStart="onStart">

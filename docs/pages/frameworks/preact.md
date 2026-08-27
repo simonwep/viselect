@@ -74,10 +74,11 @@ const App: FunctionComponent = () => {
 
   return (
     <>
-      <SelectionArea className="container"
-               onStart={onStart}
-               onMove={onMove}
-               selectables=".selectable">
+      <SelectionArea className="container" 
+                     selectionAreaClass="selection-area"
+                     onStart={onStart}
+                     onMove={onMove}
+                     selectables=".selectable">
         {new Array(42).fill(0).map((_, index) => (
           <div className={selected.has(index) ? 'selected selectable' : 'selectable'}
              data-key={index}
