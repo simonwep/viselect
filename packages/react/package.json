@@ -23,7 +23,10 @@
     "dev": "vite"
   },
   "files": [
-    "dist"
+    "dist/src",
+    "dist/*.js",
+    "dist/*.cjs",
+    "dist/*.map"
   ],
   "keywords": [
     "react",
