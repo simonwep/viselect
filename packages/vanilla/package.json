@@ -19,9 +19,8 @@
     }
   },
   "scripts": {
-    "test": "vitest --run",
-    "test:watch": "vitest --watch",
-    "test:ui": "vitest --ui",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
     "build": "tsc && vite build",
     "dev": "vite"
   },
@@ -39,15 +38,13 @@
     "ui"
   ],
   "devDependencies": {
+    "@playwright/test": "1.62.1",
     "@types/node": "26.2.0",
-    "@vitest/browser-playwright": "4.1.11",
-    "@vitest/ui": "4.1.11",
     "playwright": "1.62.1",
     "typescript": "6.0.3",
     "unplugin-dts": "1.0.3",
     "vite": "8.2.2",
-    "vite-plugin-banner": "0.8.1",
-    "vitest": "4.1.11"
+    "vite-plugin-banner": "0.8.1"
   },
   "publishConfig": {
     "access": "public"

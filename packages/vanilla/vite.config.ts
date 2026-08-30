@@ -5,7 +5,7 @@ import dts from 'unplugin-dts/vite';
 const header = `/*! @viselect/vanilla v${process.env.npm_package_version} MIT | https://github.com/simonwep/viselect/tree/master/packages/vanilla */`;
 
 export default defineConfig((env) => ({
-  root: env.mode === 'production' ? '.' : './demo',
+  root: env.mode === 'production' || env.mode === 'test' ? '.' : './demo',
 
   plugins: [banner(header), dts({ tsconfigPath: './tsconfig.app.json' })],
 

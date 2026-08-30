@@ -1,31 +1,31 @@
-import { expect, it } from 'vitest';
-import { userEvent } from 'vitest/browser';
-import { createSetup } from './utils/createSetup.ts';
+import { expect, test } from './utils/setup.ts';
 
-const { fixture } = createSetup();
+test('selects all elements when fast scrolling', async ({ page, selection }) => {
+  await selection.setup({ itemCount: 12 });
 
-it('uses the real scrollable boundary for browser dragging and clips the selection area', async () => {
-  const { boundary, items, selection } = fixture({
-    _itemCount: 12,
-    selectionAreaClass: 'test-area',
-    selectionContainerClass: 'test-clip'
-  });
+  await selection.boundary.evaluate((element) => element.classList.add('scrollable'));
+  expect(await selection.boundary.evaluate((element) => element.scrollHeight > element.clientHeight)).toBe(true);
 
-  boundary.classList.add('scrollable');
+  const start = await selection.items.nth(0).boundingBox();
+  const end = await selection.items.nth(3).boundingBox();
 
-  expect(boundary.scrollHeight).toBeGreaterThan(boundary.clientHeight);
-  await userEvent.dragAndDrop(items[0], items[3]);
+  if (!start || !end) throw new Error('Could not measure drag targets');
+  await page.mouse.move(start.x + 5, start.y + 5);
+  await page.mouse.down();
+  await page.mouse.move(start.x + 10, 500, { steps: 60 });
 
-  expect(selection.getSelectionArea().classList).toContain('test-area');
-  expect(selection.getSelectionArea().parentElement?.classList).toContain('test-clip');
+  await expect
+    .poll(() =>
+      selection.boundary.evaluate((element) => element.scrollTop + element.clientHeight >= element.scrollHeight)
+    )
+    .toBe(true);
 
-  await userEvent.wheel(boundary, { delta: { y: 160 } });
-  expect(boundary.scrollTop).toBeGreaterThan(0);
+  await page.mouse.up();
+  expect(await selection.selectedCount()).toBe(6);
 });
 
-it('does not mount an area for a cancelled selection', () => {
-  const { selection } = fixture();
-  selection.cancel();
-
-  expect(selection.getSelectionArea().isConnected).toBe(false);
+test('does not mount an area for a cancelled selection', async ({ selection }) => {
+  await selection.setup();
+  await selection.run((instance) => instance.cancel());
+  expect(await selection.isAreaMounted()).toBe(false);
 });

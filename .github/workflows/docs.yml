@@ -2,6 +2,8 @@ name: Build and deploy docs
 
 on:
   push:
+    tags-ignore:
+      - '**'
     branches:
       - master
 

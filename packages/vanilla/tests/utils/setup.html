@@ -7,7 +7,7 @@
         position: relative;
         width: 240px;
         height: 240px;
-        border: 1px solid;
+        border: 1px solid #142e6e;
         overflow: hidden;
     }
 
@@ -28,10 +28,18 @@
     #boundary.scrollable #start-area {
         min-height: 520px;
     }
-
-    .selectable {
+    
+    .selectable,
+    .outside {
+        background: #b5daf5;
+        align-content: center;
+        text-align: center;
         width: 80px;
         height: 80px;
+    }
+    
+    .selectable.selected {
+        background: #142e6e;
     }
 
     #tap-overlay {
@@ -46,16 +54,19 @@
     }
 
     #outside {
-        width: 80px;
-        height: 80px;
         margin-top: 16px;
+    }
+    
+    .selection-area {
+        background: rgb(252 46 46 / 0.24);
+        border: 1px solid red;
     }
 </style>
 
-<main id="boundary" data-testid="boundary">
-    <section id="start-area" data-testid="start-area">
-        <button id="tap-overlay" data-testid="tap-overlay"></button>
+<main id="boundary">
+    <section id="start-area">
+        <div id="tap-overlay"></div>
     </section>
 </main>
 
-<button id="outside" data-testid="outside">outside</button>
+<div class="outside">outside</div>

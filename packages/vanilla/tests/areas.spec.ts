@@ -1,29 +1,22 @@
-import { expect, it } from 'vitest';
-import { userEvent } from 'vitest/browser';
-import { createSetup } from './utils/createSetup.ts';
+import { expect, test } from './utils/setup.ts';
 
-const { fixture } = createSetup();
+test('only starts from a configured start area', async ({ selection }) => {
+  await selection.setup({ startAreas: ['#outside'] });
+  await selection.items.nth(0).click();
 
-it('only starts from a configured start area', async () => {
-  const { items, selection } = fixture({ startAreas: ['#outside'] });
-
-  await userEvent.click(items[0]);
-
-  expect(selection.getSelection()).toEqual([]);
+  expect(await selection.selectedCount()).toBe(0);
 });
 
-it('only starts inside a configured boundary', async () => {
-  const { items, selection } = fixture({ boundaries: ['#outside'] });
+test('only starts inside a configured boundary', async ({ selection }) => {
+  await selection.setup({ boundaries: ['#outside'] });
+  await selection.items.nth(0).click();
 
-  await userEvent.click(items[0]);
-
-  expect(selection.getSelection()).toEqual([]);
+  expect(await selection.selectedCount()).toBe(0);
 });
 
-it('accepts an interaction when its start area is inside its boundary', async () => {
-  const { items, selection } = fixture();
+test('accepts an interaction when its start area is inside its boundary', async ({ selection }) => {
+  await selection.setup();
+  await selection.items.nth(0).click();
 
-  await userEvent.click(items[0]);
-
-  expect(selection.getSelection()).toEqual([items[0]]);
+  expect(await selection.selectedIndexes()).toEqual(['0']);
 });
