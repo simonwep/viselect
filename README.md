@@ -25,9 +25,9 @@
   <a href="https://www.buymeacoffee.com/aVc3krbXQ"><img
     alt="Buy me a coffee"
     src="https://img.shields.io/badge/%F0%9F%8D%BA-buy%20me%20a%20beer-%23FFDD00"></a>
-  <a href="https://github.com/simonwep/viselect/actions/workflows/main.yml"><img
+  <a href="https://github.com/simonwep/viselect/actions/workflows/test.yml"><img
     alt="Build Status"
-    src="https://github.com/simonwep/viselect/actions/workflows/main.yml/badge.svg"></a>
+    src="https://github.com/simonwep/viselect/actions/workflows/test.yml/badge.svg"></a>
   <a href="https://github.com/simonwep/viselect/actions/workflows/deploy.yml"><img
     alt="Docs"
     src="https://github.com/simonwep/viselect/actions/workflows/docs.yml/badge.svg"></a>
