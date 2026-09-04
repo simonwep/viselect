@@ -3,7 +3,7 @@ description: 'Set up the repository with pnpm and Node.js'
 inputs:
   pnpm-version:
     description: 'Version of pnpm to use'
-    default: '10.27.0'
+    default: '11.25.0'
   node-version:
     description: 'Version of Node.js to use'
     default: '24.12.0'

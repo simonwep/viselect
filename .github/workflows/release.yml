@@ -22,7 +22,12 @@ jobs:
         run: pnpm build
 
       - name: Publish packages
-        run: npx lerna publish from-package --yes
+        run: |
+          pnpm publish \
+            --recursive \
+            --no-git-checks \
+            --provenance \
+            --access public
 
       - name: Extract changes
         id: changelog
