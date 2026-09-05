@@ -1,9 +1,5 @@
 # Quickstart
 
-> [!NOTE]
-> This documentation is brand new ✨
-> If you have any questions or something's missing, feel free to [open an issue](https://github.com/simonwep/viselect/issues) 💖
-
 Viselect can be used with [vue 3](./frameworks/vue.md), [preact](./frameworks/preact.md), [react](./frameworks/react.md), or [without](./frameworks/vanilla.md) any framework.
 All its variants are available as separate packages under the `@viselect` namespace.
 
@@ -15,9 +11,26 @@ For the following we'll use the vanilla package, an `index.html`, `styles.css`, 
 
 ::: code-group
 
+```sh [npm]
+npm install @viselect/vanilla --save-exact
+```
+
+```sh [pnpm]
+pnpm add @viselect/vanilla --save-exact
+```
+
+```sh [lerna]
+lerna add @viselect/vanilla --save-exact
+```
+
+:::
+
+
+
+::: code-group
+
 ```js [main.mjs]
-import SelectionArea from 'https://cdn.jsdelivr.net/npm/@viselect/vanilla/dist/viselect.mjs';
-// or import SelectionArea from '@viselect/vanilla';
+import SelectionArea from '@viselect/vanilla';
 
 // Generate some divs to select later on
 [
@@ -97,7 +110,7 @@ const selection = new SelectionArea({
 
 :::
 
-Which will give you something like this:
+Which will give you:
 
 <div ref="container" :class="[$style.container, $style.purple]"/>
 <div :class="[$style.container, $style.blue]"/>

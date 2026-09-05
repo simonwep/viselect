@@ -13,35 +13,12 @@
 </h6>
 
 <p align="center">
-  <a href="https://choosealicense.com/licenses/mit/"><img
-    alt="License MIT"
-    src="https://img.shields.io/badge/license-MIT-ae15cc.svg"></a>
-  <img alt="No dependencies"
-    src="https://img.shields.io/badge/dependencies-none-8115cc.svg">
-  <a href="https://github.com/sponsors/Simonwep"><img
-    alt="Support me"
-    src="https://img.shields.io/badge/github-support-6a15cc.svg"></a>
-  <img alt="version" src="https://img.shields.io/github/lerna-json/v/simonwep/viselect?color=%233d24c9&label=version">
-  <a href="https://www.buymeacoffee.com/aVc3krbXQ"><img
-    alt="Buy me a coffee"
-    src="https://img.shields.io/badge/%F0%9F%8D%BA-buy%20me%20a%20beer-%23FFDD00"></a>
-  <a href="https://github.com/simonwep/viselect/actions/workflows/test.yml"><img
-    alt="Build Status"
-    src="https://github.com/simonwep/viselect/actions/workflows/test.yml/badge.svg"></a>
-  <a href="https://github.com/simonwep/viselect/actions/workflows/deploy.yml"><img
-    alt="Docs"
-    src="https://github.com/simonwep/viselect/actions/workflows/docs.yml/badge.svg"></a>
+  <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-none-46a50f.svg">
+  <a href="https://github.com/sponsors/simonwep"><img alt="Support me" src="https://img.shields.io/badge/github-support-46a50f.svg"></a>
+  <img alt="downloads" src="https://raw.githubusercontent.com/simondump/static/refs/heads/master/apps/npm-viselect-downloads/dist/viselect.svg">
+  <a href="https://github.com/simonwep/viselect/actions/workflows/test.yml"><img alt="Build Status" src="https://github.com/simonwep/viselect/actions/workflows/test.yml/badge.svg"></a>
   <img alt="gzip size" src="https://img.badgesize.io/https://cdn.jsdelivr.net/npm/@viselect/vanilla/dist/viselect.umd.js?compression=gzip">
   <img alt="brotli size" src="https://img.badgesize.io/https://cdn.jsdelivr.net/npm/@viselect/vanilla/dist/viselect.umd.js?compression=brotli">
-  <a href="https://v3.vuejs.org"><img
-    alt="Vue support"
-    src="https://img.shields.io/badge/✔-vue-%2340B581"></a>
-  <a href="https://preactjs.com/"><img
-    alt="Preact support"
-    src="https://img.shields.io/badge/✔-preact-%236337B1"></a>
-  <a href="https://reactjs.org"><img
-    alt="React support"
-    src="https://img.shields.io/badge/✔-react-%2359D7FF"></a>
 </p>
 
 <p align="center">
@@ -50,14 +27,13 @@
 
 ### Features 🤘
 
-* 🌟 Modern bundle
-* 🔩 Ultra tiny (~4kb)
-* 👌 Simple usage
-* ⚡ Highly optimized
-* ✔ Zero dependencies
-* 📱 Mobile / touch support
-* 🖱 Vertical and horizontal scroll support
-* 💪 Battle tested (over 6 years old and used in many apps)
+* 🧩 **Framework-ready** - a dependency-free core plus first-party React, Preact, and Vue 3 packages.
+* 🖱️ **Natural interactions** - drag, click/tap, and `Shift` range selection.
+* 🎯 **Configurable behavior** - selection triggers, thresholds, intersections, and overlap handling.
+* 📱 **Touch and scroll aware** - works with touch input and two-axis scrollable containers.
+* 🔄 **Lifecycle events** - observe or cancel interactions at every selection stage.
+* 🛠️ **Programmatic API** - manage selections, refresh selectable elements, or enable/disable selection.
+* ...and much more!
 
 ### Getting started
 

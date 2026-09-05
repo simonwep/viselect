@@ -23,7 +23,7 @@ $ yarn add -D @viselect/vanilla
 ```
 
 ```js [module]
-import SelectionArea from "https://cdn.jsdelivr.net/npm/@viselect/vanilla/dist/viselect.mjs"
+import SelectionArea from "https://cdn.jsdelivr.net/npm/@viselect/vanilla/dist/viselect.js"
 ```
 
 :::

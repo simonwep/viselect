@@ -29,7 +29,7 @@ If you don't care about text-selection, add the following to the container where
 
 ```css
 .container {
-    user-select: none;
+  user-select: none;
 }
 ```
 
@@ -37,8 +37,8 @@ Another solution is to make the document during a selection non-selectable:
 
 ```ts
 selection
-    .on('beforestart', () => document.body.style.userSelect = 'none')
-    .on('stop', () => document.body.style.userSelect = 'unset');
+  .on('beforestart', () => document.body.style.userSelect = 'none')
+  .on('stop', () => document.body.style.userSelect = 'unset');
 ```
 
 Issues: [#103](https://github.com/simonwep/viselect/issues/103)

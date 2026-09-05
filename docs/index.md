@@ -20,32 +20,32 @@ hero:
       link: pages/examples
 
 features:
-    - icon: 🌟
-      title: Modern Bundle
-      details: A cutting-edge bundle for modern web development, ensuring compatibility with the latest standards and practices.
-    - icon: 🔩
-      title: Ultra Tiny
-      details: Extremely lightweight, around 4kb in size, making it perfect for performance and size-critical applications.
-    - icon: 👌
-      title: Simple Usage
-      details: Easy to use with minimal setup required, allowing developers to integrate it quickly into any kind of project.
-    - icon: ⚡
-      title: Highly Optimized
-      details: Performance-focused and highly efficient, designed to handle large amounts of DOM elements with ease.
-    - icon: 🚀
-      title: Zero Dependencies
-      details: No external dependencies required, reducing the risk of conflicts and simplifying the build process.
+    - icon: 🧩
+      title: Framework-ready
+      details: First-party React, Preact, and Vue 3 package as well as a vanilla package for any other framework.
+    - icon: 📦
+      title: Dependency-free core
+      details: The vanilla package has no runtime dependencies keeping it ultra-tiny and highly optimized.
+    - icon: 🖱️
+      title: Drag selection
+      details: Select elements by drawing a visual selection area (click and drag).
+    - icon: 👆
+      title: Click and tap
+      details: Select individual elements with a single click or tap.
+    - icon: ↔️
+      title: Range selection
+      details: Extend a selection with Shift or select a range of elements with Shift + click/tap.
+    - icon: 🎯
+      title: Configurable behavior
+      details: Control triggers, thresholds, intersections, overlap and much more!
     - icon: 📱
-      title: Mobile / Touch Support
-      details: Fully compatible with mobile and touch devices, providing a seamless experience across all platforms.
-    - icon: 🖱
-      title: Scroll Support
-      details: Supports both vertical and horizontal scrolling, ensuring smooth navigation and interaction.
-    - icon: 💪
-      title: Battle Tested
-      details: Over 6 years of development and widely used in many applications, demonstrating its reliability and robustness.
-    - icon: 🖼
-      title: Framework Support
-      details: Compatible with major frameworks and easy to "hack" for custom integrations, providing flexibility and versatility.
+      title: Touch support
+      details: Handle visual selections on touch-enabled devices.
+    - icon: ↕️
+      title: Scroll support
+      details: Supports vertical and horizontal scrollable containers.
+    - icon: 🛠️
+      title: Events and API
+      details: Observe, cancel, and manage selections programmatically.
 ---
 
