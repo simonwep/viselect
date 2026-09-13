@@ -1,10 +1,11 @@
 import VanillaSelectionArea from '@viselect/vanilla';
 import type { SelectionEvents, PartialSelectionOptions } from '@viselect/vanilla';
-import type { HTMLAttributes, FunctionComponent } from 'react';
+import type { HTMLAttributes, FunctionComponent, CSSProperties } from 'react';
 import { useEffect, createContext, useContext, useRef, useState, useMemo } from 'react';
 
 export interface SelectionAreaProps extends PartialSelectionOptions, HTMLAttributes<HTMLDivElement> {
   id?: string;
+  style?: CSSProperties;
   className?: string;
   onBeforeStart?: SelectionEvents['beforestart'];
   onBeforeDrag?: SelectionEvents['beforedrag'];
@@ -94,7 +95,7 @@ export const SelectionArea: FunctionComponent<SelectionAreaProps> = (props) => {
       {boundaries ? (
         children
       ) : (
-        <div ref={root} className={className} id={id} {...rest}>
+        <div ref={root} className={className} id={id} style={props.style} {...rest}>
           {children}
         </div>
       )}
