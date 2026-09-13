@@ -7,7 +7,7 @@
 > [!WARNING]
 > As of [v3.8.0](https://github.com/simonwep/viselect/releases/tag/v3.8.0) Viselect requires React 19 due to breaking changes.
 > If you're using an older version of React, use [v3.7.1](https://github.com/simonwep/viselect/releases/tag/v3.7.1).
-> Note that older versions are no longer supported, however you can still [roll out your own integration](../custom-integration.md) if you need to - don't worry, it's easy!
+> Note that older versions are no longer supported, however you can still [roll out your own integration](../custom-integration.md)!
 
 To use Viselect with React, install its react package with:
 
@@ -43,8 +43,8 @@ You can use Viselect in your React project by importing the `SelectionArea` comp
 ::: code-group
 
 ```tsx [App.tsx]
-import {SelectionArea, SelectionEvent} from '@viselect/react';
-import React, {FunctionComponent, useState} from 'react';
+import { SelectionArea, SelectionEvent } from '@viselect/react';
+import React, { FunctionComponent, useState } from 'react';
 import './styles.css';
 
 const App: FunctionComponent = () => {
@@ -122,6 +122,48 @@ div.selected {
 ```
 
 :::
+
+## API
+
+### Props
+
+`SelectionArea` accepts all options from `PartialSelectionOptions` as optional props, in addition to the standard React `HTMLAttributes<HTMLDivElement>` props.
+
+#### Selection options
+
+| Prop | Type |
+| --- | --- |
+| `boundaries` | `Quantify<string \| HTMLElement>` |
+| `container` | `Quantify<string \| HTMLElement>` |
+| `document` | `Document` |
+| `selectables` | `Quantify<string>` |
+| `startAreas` | `Quantify<string \| HTMLElement>` |
+| `selectionAreaClass` | `string` |
+| `selectionContainerClass` | `string` |
+| `behaviour` | `DeepPartial<Behaviour>` |
+| `features` | `DeepPartial<Features>` |
+
+All selection option props are optional. `boundaries` defaults to the component's root `<div>`.
+When `boundaries` is provided, the component does not render that wrapper and the supplied element(s) act as the boundaries instead.
+
+#### Event callbacks
+
+| Prop | Type |
+| --- | --- |
+| `onBeforeStart` | `(event: SelectionEvent) => boolean \| void` |
+| `onBeforeDrag` | `(event: SelectionEvent) => boolean \| void` |
+| `onStart` | `(event: SelectionEvent) => void` |
+| `onMove` | `(event: SelectionEvent) => void` |
+| `onStop` | `(event: SelectionEvent) => void` |
+
+Returning `false` from `onBeforeStart` or `onBeforeDrag` cancels the selection.
+
+#### Element props
+
+The component also accepts standard React `<div>` attributes, including `id`, `className`, `style`, `children`, ARIA attributes, and event handlers such as `onClick`.
+
+The option-related types (`PartialSelectionOptions`, `Behaviour`, `Features`, `DeepPartial`, and `Quantify`) and `SelectionEvent` are re-exported from `@viselect/react`.
+See the [API reference](../api-reference.md) for their definitions.
 
 ## Hooks
 

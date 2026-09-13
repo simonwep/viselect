@@ -115,9 +115,42 @@ const onMove = ({ store: { changed: { added, removed } } }: SelectionEvent) => {
 </style>
 ```
 
-## Exposed API
+## API
 
-#### `selection`
+### Props
+
+The Vue component accepts one required prop for the selection options:
+
+| Prop | Type |
+| --- | --- |
+| `options` | `Omit<PartialSelectionOptions, 'boundaries'>` |
+
+`options` contains the following optional properties: `container: Quantify<string \| HTMLElement>`, `document: Document`, `selectables: Quantify<string>`, `startAreas: Quantify<string \| HTMLElement>`, `selectionAreaClass: string`, `selectionContainerClass: string`, `behaviour: DeepPartial<Behaviour>`, and `features: DeepPartial<Features>`.
+
+The component supplies its root `<div>` as `boundaries`, so `boundaries` cannot be set through `options`.
+    Standard Vue fallthrough attributes such as `class`, `style`, `id`, ARIA attributes, and native DOM listeners can be placed directly on `<SelectionArea>`.
+
+### Events
+
+The component emits the following events. Each event receives a `SelectionEvent`, except `init`, which receives the initialized `SelectionArea` instance.
+
+| Event | Handler type |
+| --- | --- |
+| `before-start` | `(event: SelectionEvent) => void` |
+| `before-drag` | `(event: SelectionEvent) => void` |
+| `start` | `(event: SelectionEvent) => void` |
+| `move` | `(event: SelectionEvent) => void` |
+| `stop` | `(event: SelectionEvent) => void` |
+| `init` | `(selection: SelectionArea) => void` |
+
+In contrast to the vanilla, React, and Preact integrations, Vue event handlers cannot return a value synchronously.
+Therefore, returning `false` from `before-start` or `before-drag` **does not cancel the selection**.
+
+The option-related types (`PartialSelectionOptions`, `Behaviour`, `Features`, `DeepPartial`, and `Quantify`) and `SelectionEvent` are re-exported from `@viselect/vue`.
+See the [API reference](../api-reference.md) for their definitions.
+
+
+## Composables
 
 It's possible to get the current `SelectionArea`-instance via [template refs](https://vuejs.org/guide/essentials/template-refs.html).
 
@@ -128,22 +161,21 @@ It's possible to get the current `SelectionArea`-instance via [template refs](ht
     :options="{selectables: '.selectable'}"
     ref="selectionAreaRef"
   >
-    <div 
-        v-for="id of 42"
-        class="selectable"
-        :key="id" 
-        :data-key="id"
-        :class="{selected: selected.has(id)}"
+    <div v-for="id of 42"
+         class="selectable"
+         :key="id" 
+         :data-key="id"
+         :class="{selected: selected.has(id)}"
     />
   </SelectionArea>
 </template>
 
 <script lang="ts" setup>
 import { SelectionArea } from '@viselect/vue';
-import { ref, reactive, watchEffect } from 'vue';
+import { useTemplateRef, reactive, watchEffect } from 'vue';
 
 const selected = reactive<Set<number>>(new Set());
-const selectionAreaRef = ref<InstanceType<typeof SelectionArea>>();
+const selectionAreaRef = useTemplateRef<InstanceType<typeof SelectionArea>>();
 
 watchEffect(() => {
   // log selection instance

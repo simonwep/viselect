@@ -43,9 +43,9 @@ You can use Viselect in your Preact project by importing the `SelectionArea` com
 ::: code-group
 
 ```tsx [App.tsx]
-import {SelectionArea, SelectionEvent} from '@viselect/preact';
-import {FunctionalComponent} from 'preact';
-import {useState} from 'preact/hooks';
+import { SelectionArea, SelectionEvent } from '@viselect/preact';
+import { FunctionalComponent } from 'preact';
+import { useState } from 'preact/hooks';
 import './styles.css';
 
 const App: FunctionComponent = () => {
@@ -123,6 +123,48 @@ div.selected {
 ```
 
 :::
+
+## API
+
+### Props
+
+`SelectionArea` accepts all options from `PartialSelectionOptions` as optional props, in addition to the standard Preact `HTMLAttributes<HTMLDivElement>` props.
+
+#### Selection options
+
+| Prop | Type |
+| --- | --- |
+| `boundaries` | `Quantify<string \| HTMLElement>` |
+| `container` | `Quantify<string \| HTMLElement>` |
+| `document` | `Document` |
+| `selectables` | `Quantify<string>` |
+| `startAreas` | `Quantify<string \| HTMLElement>` |
+| `selectionAreaClass` | `string` |
+| `selectionContainerClass` | `string` |
+| `behaviour` | `DeepPartial<Behaviour>` |
+| `features` | `DeepPartial<Features>` |
+
+All selection option props are optional. `boundaries` defaults to the component's root `<div>`.
+When `boundaries` is provided, the component does not render that wrapper and the supplied element(s) act as the boundaries instead.
+
+#### Event callbacks
+
+| Prop | Type |
+| --- | --- |
+| `onBeforeStart` | `(event: SelectionEvent) => boolean \| void` |
+| `onBeforeDrag` | `(event: SelectionEvent) => boolean \| void` |
+| `onStart` | `(event: SelectionEvent) => void` |
+| `onMove` | `(event: SelectionEvent) => void` |
+| `onStop` | `(event: SelectionEvent) => void` |
+
+Returning `false` from `onBeforeStart` or `onBeforeDrag` cancels the selection.
+
+#### Element props
+
+The component also accepts standard Preact `<div>` attributes, including `id`, `className`, `style`, `children`, ARIA attributes, and event handlers such as `onClick`.
+
+The option-related types (`PartialSelectionOptions`, `Behaviour`, `Features`, `DeepPartial`, and `Quantify`) and `SelectionEvent` are re-exported from `@viselect/preact`.
+See the [API reference](../api-reference.md) for their definitions.
 
 ## Hooks
 

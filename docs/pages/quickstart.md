@@ -116,7 +116,7 @@ Which will give you:
 <div :class="[$style.container, $style.blue]"/>
 
 <script setup>
-import {useCssModule, onMounted, useTemplateRef} from 'vue';
+import { useCssModule, onMounted, useTemplateRef } from 'vue';
 import SelectionArea from '@viselect/vanilla';
 
 const styles = useCssModule();
