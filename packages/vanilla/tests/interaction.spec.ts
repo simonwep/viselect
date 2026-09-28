@@ -4,6 +4,7 @@ type TestWindow = Window & {
   events?: string[];
   started?: boolean;
   beforeDrag?: number;
+  stopped?: boolean;
 };
 
 test('emits the drag lifecycle and maintains the selected elements', async ({ selection }) => {
@@ -23,6 +24,53 @@ test('emits the drag lifecycle and maintains the selected elements', async ({ se
     expect.arrayContaining(['beforestart', 'beforedrag', 'start', 'move', 'stop'])
   );
 
+  expect(await selection.isAreaMounted()).toBe(false);
+});
+
+test('stops a drag released over native video controls', async ({ page, selection }) => {
+  await selection.setup();
+  await selection.run((instance) => {
+    const browserWindow = window as TestWindow;
+    browserWindow.stopped = false;
+    instance.on('stop', () => {
+      browserWindow.stopped = true;
+    });
+  });
+
+  await page.evaluate(() => {
+    const video = document.createElement('video');
+    video.id = 'native-video-controls';
+    video.controls = true;
+    Object.assign(video.style, {
+      position: 'fixed',
+      left: '320px',
+      top: '32px',
+      width: '320px',
+      height: '180px',
+      background: 'black'
+    });
+    document.body.append(video);
+  });
+
+  const nativeVideo = page.locator('#native-video-controls');
+  await expect(nativeVideo).toBeVisible();
+  expect(await nativeVideo.evaluate((element) => (element as HTMLVideoElement).controls)).toBe(true);
+
+  const start = await selection.items.first().boundingBox();
+  const video = await nativeVideo.boundingBox();
+
+  if (!start || !video) throw new Error('Could not measure drag targets');
+
+  await page.mouse.move(start.x + 10, start.y + 10);
+  await page.mouse.down();
+  await page.mouse.move(start.x + 40, start.y + 40, { steps: 10 });
+
+  await expect.poll(() => selection.isAreaMounted()).toBe(true);
+
+  await page.mouse.move(video.x + video.width / 2, video.y + video.height - 8, { steps: 20 });
+  await page.mouse.up();
+
+  expect(await selection.run(() => (window as TestWindow).stopped)).toBe(true);
   expect(await selection.isAreaMounted()).toBe(false);
 });
 

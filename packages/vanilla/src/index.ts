@@ -60,6 +60,8 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
   // If a single click is being performed, it's a single-click until the user dragged the mouse
   private _singleClick = true;
   private _frame: Frames;
+  private _pointer?: { id: number; button: number; x: number; y: number };
+  private _activePointerId?: number;
 
   // Required data for scrolling
   private _scrollAvailable = true;
@@ -160,6 +162,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     const { document, features } = this._options;
     const fn = activate ? on : off;
 
+    fn(document, 'pointerdown', this._onPointerStart);
     fn(document, 'mousedown', this._onTapStart);
 
     if (features.touch) {
@@ -167,8 +170,23 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
     }
   }
 
+  _onPointerStart(evt: PointerEvent): void {
+    this._pointer =
+      evt.pointerType === 'mouse'
+        ? { id: evt.pointerId, button: evt.button, x: evt.clientX, y: evt.clientY }
+        : undefined;
+  }
+
   _onTapStart(evt: MouseEvent | TouchEvent, silent = false): void {
     const { x, y, target } = simplifyEvent(evt);
+    const pointer =
+      evt instanceof MouseEvent &&
+      this._pointer?.button === evt.button &&
+      this._pointer.x === evt.clientX &&
+      this._pointer.y === evt.clientY
+        ? this._pointer
+        : undefined;
+    this._pointer = undefined;
     const { document, startAreas, boundaries, features, behaviour } = this._options;
     const targetBoundingClientRect = target.getBoundingClientRect();
 
@@ -198,6 +216,7 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
       return;
     }
 
+    this._activePointerId = pointer?.id;
     this._areaLocation = { x1: x, y1: y, x2: 0, y2: 0 };
 
     // Lock scrolling in the target container
@@ -315,8 +334,13 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
       off(document, ['mousemove', 'touchmove'], this._delayedTapMove, { passive: false });
 
       if (this._emitEvent('beforedrag', evt) === false) {
+        this._activePointerId = undefined;
         off(document, ['mouseup', 'touchcancel', 'touchend'], this._onTapStop);
         return;
+      }
+
+      if (this._activePointerId !== undefined) {
+        this._targetElement!.setPointerCapture(this._activePointerId);
       }
 
       on(document, ['mousemove', 'touchmove'], this._onTapMove, { passive: false });
@@ -609,6 +633,11 @@ export default class SelectionArea extends EventTarget<SelectionEvents> {
   _onTapStop(evt: MouseEvent | TouchEvent | null, silent: boolean): void {
     const { document, features } = this._options;
     const { _singleClick } = this;
+
+    if (this._activePointerId !== undefined && this._targetElement?.hasPointerCapture(this._activePointerId)) {
+      this._targetElement.releasePointerCapture(this._activePointerId);
+    }
+    this._activePointerId = undefined;
 
     // Remove event handlers
     off(this._targetElement, 'scroll', this._onStartAreaScroll);
